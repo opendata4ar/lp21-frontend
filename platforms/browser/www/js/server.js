@@ -5,8 +5,10 @@
 var server = {
 
     load: function(entity, accessCode) {
-	  if (entity == "home") {
-	    return this.loadMyClasses(accessCode);
+	  if (entity == "startp") {
+	    return this.loadMyKids(accessCode);
+	  } else if (entity == "home") {
+		return this.loadMyClasses(accessCode);
 	  } else if (entity == "country") {
 	    return this.loadCountries();
 	  } else if (entity == "city") {
@@ -180,6 +182,17 @@ var server = {
 	  return profile_list;
 	},
 	
+	loadMyKids: function(accessCode) {
+	  var my_kids = ""; // FIXME: search for kids having parent with email as member
+	  var email = this.getEmailOfAccessCode(accessCode);
+	  if (email != "?") {
+		my_kids += "<ul id=choose_startp_list data-role=listview data-filter=true data-autodividers=true data-inset=true data-input=#choose_startp>";
+		my_kids +=   "<li data-filtertext='Alex'><a href=#member_page>Alex<span class=ui-li-count>3</span></a></li>";
+		my_kids +=   "<li data-filtertext='Remo'><a href=#member_page>Remo<span class=ui-li-count>1</span></a></li>";
+		my_kids += "</ul>";
+	  }
+	  return my_kids;
+	},
 	
 	loadMyClasses: function(accessCode) {
 	  var my_classes = ""; // FIXME: search for classes having email as member

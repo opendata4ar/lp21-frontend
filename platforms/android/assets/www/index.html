@@ -307,7 +307,7 @@
 	
 	/* 
 	-------------------------- 
-	--- home_page --- 
+	--- home_page teacher  --- 
 	-------------------------- 
 	*/
 	client.preparePage("home", "member", function(event) {
@@ -361,14 +361,47 @@
 	
 	</script>
         
-        <title>My Class: </title>
+        <title>Schule21</title>
     </head>
     <body>
+    
+    <!-- 
+	  **************************  
+	  *** home_page parents  *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="startp_page" class="ui-page-theme-b">
+        <div data-role="header">
+          <a href="#help_page" data-icon="info" class="ui-btn-left">Help</a>
+		  <h1>Schule21</h1>
+		  <!--  a id="startp_goto_settings" href="#settings_page" data-icon="settings" class="ui-btn-right" style="display: none">mehr</a -->
+        </div>
+        <div data-role="content">
+          <div member="ui-field-contain">
+            <form member="ui-filterable">
+              <input id="choose_startp" method="get" action="#URL#" data-type="search" placeholder="Suche Name">
+            </form> 
+		  </div>
+		  <ul id="choose_startp_list" data-role="listview" data-filter="true" data-autodividers="true" data-inset="true" data-input="#choose_startp"/>
+            
+          		
+		</div>
+		
+		<div id="confirm_start_delete" class="ui-content" data-role="popup" style="display: none;">
+		  <p id="delete_startp_question">Are you sure you want to delete?</p>
+		  <div class="ui-grid-a">
+		    <div class="ui-block-a"><a id="confirm_startp_delete_yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">ja</a></div>
+	        <div class="ui-block-b"><a id="confirm_startp_delete_cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">abbrechen</a></div>
+		  </div>
+		</div>
+		<div data-role="footer">
+        </div>
+      </div>
   
   
 	  <!-- 
 	  **************************  
-	  *** home_page *** 
+	  *** home_page teacher  *** 
 	  ************************** 
 	  -->
 	  <div data-role="page" id="home_page" class="ui-page-theme-b">

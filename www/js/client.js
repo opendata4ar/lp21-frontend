@@ -134,7 +134,9 @@ var client = {
 		addForm.remove();
 		
 		// TODO: refactor
-		if (page == "home") {
+	    if (page == "startp") {
+		  var addForm = client.loadFormAddEntityNoInput("member", "add_member", "Schüler");
+	    } else if (page == "home") {
 	      var addForm = client.loadFormAddEntityNoInput("home", "country", "class");
 		} else if (page == "profile_detail") {
 		  var addForm = client.loadFormAddEntityKeyValue(page, next, "detail", "value");
