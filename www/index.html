@@ -228,6 +228,32 @@
 	});	
 	
 	
+	
+	
+	/* 
+	--------------------------- 
+	--- add_mykid_page --- 
+	--------------------------- 
+	*/	
+
+	client.preparePage("add_mykid", "city", function(event) {
+	      // drilldown into city
+	      client.saveEntity("city","school", event.target.text);
+		  client.chosenCity = event.target.text;
+		  client.chosenKid = $("#add_mykid_name").val();
+	      client.saveEntity("mykid","city", client.chosenKid);
+		  setHeader("Schulgemeinde von " + client.chosenKid); 
+	    },
+		function(event) {
+		  // addItemCallback new city
+		  client.chosenKid = $("#add_mykid_name").val();
+	      client.saveEntity("mykid","city", client.chosenKid);
+		  setHeader("Schulgemeinde von " + client.chosenKid); 
+	    }
+	); 
+;
+	
+	
 	/* 
 	-------------------------- 
 	--- profile_detail_page --- 
@@ -357,10 +383,10 @@
 	--- home_page parents  --- 
 	-------------------------- 
 	*/
-	client.preparePage("startp", "member", function(event) {
+	client.preparePage("startp", "add_mykid", function(event) {
 	    client.chosenClass = event.target.text;
         client.isAddingClass = false;
-		// set title of subsequent pages (for next page, it has been set already in preparePage)
+		//TODO set title of subsequent pages (for next page, it has been set already in preparePage)
 		$("#teacher_page div:jqmData(role=header) h1").text("Teachers of " + client.chosenClass);
         $("#student_page div:jqmData(role=header) h1").text("Students of " + client.chosenClass);
         $("#parent_page div:jqmData(role=header) h1").text("Parents of " + client.chosenClass); 		
@@ -419,7 +445,7 @@
 	  -->
 	<div data-role="page" id="startp_page" class="ui-page-theme-b">
 		<div data-role="header">
-			<a href="#help_page" data-icon="info" class="ui-btn-left">Help</a>
+			<a href="#help_page" data-icon="bars" class="ui-btn-left" style="display: none">mehr</a>
 			<h1>Schule21</h1>
 			<a id="reset" href="#reset" data-icon="refresh" class="ui-btn-right">reset</a>
 		</div>
@@ -751,7 +777,7 @@
 	  -->
 	<div data-role="page" id="add_member_page">
 		<div data-role="header" data-add-back-btn="true">
-			<h1>Invite to class</h1>
+			<h1>Einladen</h1>
 		</div>
 		<div data-role="content">
 			<div class="ui-field-contain">
@@ -760,6 +786,38 @@
 						data-type="search" placeholder="search in contacts ...">
 				</form>
 			</div>
+		</div>
+		<div data-role="footer"></div>
+	</div>
+	
+	
+	<!-- 
+	  **************************  
+	  *** add_mykid_page *** 
+	  ************************** 
+	  -->
+	<div data-role="page" id="add_mykid_page" class="ui-page-theme-b">
+		<div data-role="header" data-add-back-btn="true">
+			<h1>neuer Schüler</h1>
+			<!-- a id="save_mykid_form" href="#" data-icon="check" class="ui-btn-right">OK</a -->
+		</div>
+		
+		<div>
+		  <!-- form id="add_mykid_form" method="post" action="#" -->
+		  <table width="100%">
+			<tr><td><label id="add_mykid_name_label" for="add_mykid_name">Name</label></td>
+				<td><input id="add_mykid_name" type="text" placeholder="z.B. Neo"></td>
+			</tr>
+		  </table>
+		  <!--/form-->
+		</div>
+		
+		<div data-role="content">
+		  Schulgemeinde
+		  <ul id="choose_add_mykid_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_add_mycity"/>
+		</div>
+		<div id="add_mykid_div">
+
 		</div>
 		<div data-role="footer"></div>
 	</div>
