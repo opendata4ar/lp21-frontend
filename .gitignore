@@ -8,3 +8,9 @@ node_modules/.bin/create.cmd
 *.bin
 *.lock
 *.bin
+platforms/android/.gradle/3.3/taskArtifacts/fileHashes.bin
+*.bin
+platforms/android/.gradle/3.3/taskArtifacts/fileHashes.bin
+platforms/android/.gradle/3.3/taskArtifacts/fileSnapshots.bin
+platforms/android/.gradle/3.3/taskArtifacts/taskArtifacts.lock
+platforms/android/.gradle/3.3/taskArtifacts/fileSnapshots.bin
