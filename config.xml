@@ -4,7 +4,6 @@
     <description>Kompetenzen im Lehrplan 21</description>
     <author email="opendata4ar@gmail.com" href="">opendata4ar</author>
     <content src="index.html" />
-    <plugin name="cordova-plugin-whitelist" spec="1" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -19,5 +18,7 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
+    <engine name="browser" spec="^4.1.0" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <engine name="android" spec="~6.2.3" />
 </widget>

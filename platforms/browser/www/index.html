@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<!--
+    Copyright by opendata4ar
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=medium-dpi" />
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+		<script type="text/javascript" src="js/device.js"></script>
+		<script type="text/javascript" src="js/client.js"></script>
+		<script type="text/javascript" src="js/server.js"></script>
+		<script type="text/javascript" src="js/html5sql.js"></script>
+		<script type="text/javascript" src="js/db.js"></script>
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+		<script type="text/javascript" src="cordova.js"></script><!-- not used before compile time -->
+		
+        <script>
+	
+	
+	
+	
+	/* 
+	--------------------------- 
+	--- country_page --- 
+	--------------------------- 
+	*/	
+
+	client.preparePage("country", "city", function(event) {
+	      client.saveEntity("country","city",event.target.text);
+		  client.chosenCountry = event.target.text;
+	    },
+		function(event) {
+		  var added = $("#country_page div:jqmData(role=content) form table input").val();
+	      client.addEntity("country","city",added);
+		  client.chosenCountry = event.target.text;
+	    }
+	);
+	
+	
+	/* 
+	--------------------------- 
+	--- city_page --- 
+	--------------------------- 
+	*/
+	  
+	client.preparePage("city", "school", function(event) {
+	      client.saveEntity("city","school",event.target.text);
+		  client.chosenCity = event.target.text;
+	    },
+		function(event) {
+		  var added = $("#city_page div:jqmData(role=content) form table input").val();
+	      client.addEntity("city","school",added);
+		  client.chosenCity = added;
+	    }
+	);
+	
+	
+	/* 
+	-------------------------- 
+	--- school_page --- 
+	-------------------------- 
+	*/
+		  
+	client.preparePage("school", "class", function(event) {
+	      client.saveEntity("school","class",event.target.text);
+		  client.chosenSchool = event.target.text;
+	    },
+		function(event) {
+		  var added = $("#school_page div:jqmData(role=content) form table input").val();
+	      client.addEntity("school","class",added);
+		  client.chosenSchool = added;
+	    }
+	);
+	
+	/* 
+	-------------------------- 
+	--- class_page --- 
+	-------------------------- 
+	*/
+	client.preparePage("class", "member", function(event) {
+	    client.saveEntity("class","member",event.target.text);
+		client.chosenClass = event.target.text;
+		// set title of subsequent pages (for next page, it has been set already in preparePage)
+		$("#teacher_page div:jqmData(role=header) h1").text("Teachers of " + client.chosenClass);
+        $("#student_page div:jqmData(role=header) h1").text("Students of " + client.chosenClass);
+        $("#parent_page div:jqmData(role=header) h1").text("Parents of " + client.chosenClass); 	
+	  }, 
+      function(event) { 
+        var added = $("#member_page div:jqmData(role=content) form table input").val();
+	    client.addEntity("class","member",added);
+		client.chosenClass = added;
+		//$("#member_page div:jqmData(role=header) h1").text(client.chosenClass);	
+	  }
+	);	 	
+	
+	
+	/* 
+	--------------------------------
+	--- member_page (class home) --- 
+	-------------------------------- 
+	*/
+		  
+	$(document).on("pagecreate","#member_page",function(){
+	    // clean and re-populate the list (TODO: connect again?)
+		$("#member_page div:jqmData(role=content) ul").remove();
+	    $("#member_page div:jqmData(role=content) table").remove();
+	    var member_list = server.loadMembers();
+		$("#member_page div:jqmData(role=content)").append (member_list);
+		$("#member_page").trigger( "create" );
+		
+	    $(".ui-icon-carat-r").click(function(event) {
+	      client.saveEntity("member","profile_detail",event.target.text); //FIXME
+		  client.chosenRole = event.target.text; // for teacher|student|parent only
+		  	
+		  if (client.isAddingClass) {
+		    // TODO: dropdown my role
+		    
+		  }
+	    });
+		
+	});
+
+	
+	/* 
+	-------------------------- 
+	--- parent_page --- 
+	-------------------------- 
+	*/
+	client.preparePage("parent", "profile_detail", function(event) {
+	    client.saveEntity("parent","profile_detail",event.target.text);
+		client.chosenPerson = event.target.text;
+		setHeader(client.chosenPerson);
+	  }, 
+      function(event) { 
+        var added = $("#member_page div:jqmData(role=content) form table input").val();
+	    client.addEntity("parent","add_member",added);
+		client.chosenPerson = added; // TODO: invite person (send code by email/sms)
+		setHeader(client.chosenPerson);
+	  }
+	);	 
+
+    function setHeader(person) {
+	  $("#profile_detail_page div:jqmData(role=header) h1").text(person);
+	  if (client.getMyAccessCode() == null) {
+	    $("#profile_detail_page div:jqmData(role=header) a").text("That's me!");
+	  }
+	}
+	
+	
+	/* 
+	-------------------------- 
+	--- teacher_page --- 
+	-------------------------- 
+	*/
+	client.preparePage("teacher", "profile_detail", function(event) {
+	    client.saveEntity("teacher","profile_detail",event.target.text);
+		client.chosenPerson = event.target.text;
+		setHeader(client.chosenPerson); 
+	  }, 
+      function(event) { 
+        var added = $("#member_page div:jqmData(role=content) form table input").val();
+	    client.addEntity("teacher","add_member",added);
+		client.chosenPerson = added;
+		setHeader(client.chosenPerson);	
+	  }
+	);	 
+	
+	
+	/* 
+	-------------------------- 
+	--- student_page --- 
+	-------------------------- 
+	*/
+	client.preparePage("student", "profile_detail", function(event) {
+	    client.saveEntity("student","profile_detail",event.target.text);
+		client.chosenPerson = event.target.text;
+		setHeader(client.chosenPerson); 
+	  }, 
+      function(event) { 
+        var added = $("#member_page div:jqmData(role=content) form table input").val();
+	    client.addEntity("student","add_member",added);
+		client.chosenPerson = added;
+		setHeader(client.chosenPerson);
+	  }
+	);	  
+	
+	
+	/* 
+	-------------------------- 
+	--- add_member_page --- 
+	-------------------------- 
+	*/	  
+	  
+	$(document).on("pagecreate","#add_member_page",function(){
+	    // clean and re-populate the list?
+	    $("#add_member_page div:jqmData(role=content) ul").remove();
+	    $("#add_member_page div:jqmData(role=content) table").remove();
+		if (gap.isReady) {
+	      gap.findContacts();
+		} else {
+		  alert("No access to contacts");
+		  var pageName = "add_member"; // + client.chosenRole;
+		  var addForm = client.loadFormAddEntityKeyValue(pageName, "profile_detail","given name","family name");
+		  $("#add_member_page div:jqmData(role=content)").append (addForm).trigger( "create" );
+		}
+	    $(".ui-icon-carat-r").click(function(event) {
+	      client.saveEntity("member","profile_detail",event.target.text);
+		  client.chosenPerson = event.target.text;
+		  client.chosenContactId = event.target.id;
+		  $("#profile_detail_page div:jqmData(role=header) h1").text(client.chosenPerson); 
+		  //invite(client.chosenPerson, event.target.id);
+	    });
+		$(".ui-icon-plus").click(function(event) {
+		  //var added = $("#add_" + pageName + "_form table input").val();
+	      //client.addEntity("member","profile_detail",added);
+		  //$("#profile_detail_page div:jqmData(role=header) h1").text(client.chosenPerson);
+		  //invite(client.chosenPerson, -1);
+		  client.chosenPerson = $("#add_" + pageName + "_key").val() + " " + $("#add_" + pageName + "_text").val();
+		  $("#profile_detail_page div:jqmData(role=header) h1").text(client.chosenPerson);
+		  if (!client.accessCode) {
+		    // user not yet authenticated
+			$("#profile_detail_page div:jqmData(role=header) a").text = "That's me!";
+		  }
+	    });
+	});	
+	
+	
+	/* 
+	-------------------------- 
+	--- profile_detail_page --- 
+	-------------------------- 
+	*/
+	client.preparePage("profile_detail", "profile_detail", function(event) { client.saveEntity("profile_detail", "profile_detail", event.target.text); }, function(event) { addProfileDetail(event); });	  
+	
+	
+	function addProfileDetail(event) {
+	  var added = $("#profile_detail_page div:jqmData(role=content) form table input").val();
+	  client.addEntity("profile_detail","profile_detail",added);
+	  $("#profile_detail_page div:jqmData(role=content) ul li:last").after("<li>" + added + "</li>");
+	  //$("#profile_detail_page div:jqmData(role=content) ul").refresh();
+	  // Force re-layouting. Tried refresh() on listview, 
+	  var searchBox = "#profile_detail_page div:jqmData(role=content) div form div input";
+	  $(searchBox).change();
+	  var addButton = $("#profile_detail_page div:jqmData(role=content) form div table input");
+	  addButton.val("");
+	}
+	
+	$( document ).on( "pagecreate", "#profile_detail_page", function() {
+	  $("#invite_form").on("click", function() {
+	    invite();
+	  });
+	});
+	
+	function invite() {
+	  var email = null;
+	  if (!client.chosenContactId) {
+	    //get email from profile_detail
+		email = $("#profile_detail_email").text();
+		// TODO: ask only if person has an email or phone in details but no code yet (=not identified)
+	  } else if (device.contacts[client.chosenContactId].emails) {
+	    email = device.contacts[client.chosenContactId].emails[0].value;   
+	  }
+	  if (email) {
+	    var popup = $("#confirm_invite");
+		if (client.getMyAccessCode() != null) {
+		  var question = "Invite " + client.chosenPerson + " to " + client.chosenRole + " into class " + client.chosenClass + "?";
+		} else {
+		  var question = "To verify your email, send an access code to fam.reich@hotmail.com?";
+		}
+		popup.children("p").text(question);
+	    popup.show();
+	    popup.popup( "open" );
+		$("#confirm_invite_yes").on( "click", function() {
+		  alert("TODO: serverside genCode and send email to " + email + " on behalf of this user (me)");
+		  server.invite(client.chosenPerson,email,client.chosenRole,client.chosenClass);
+		});
+		
+	  }
+	}
+
+	/* 
+	-------------------------- 
+	--- homework_page --- 
+	-------------------------- 
+	*/
+	client.preparePage("homework", "homework_detail", function(event) {
+	    
+	},  function(event) {});
+	
+	/* 
+	-------------------------- 
+	--- homework_detail_page --- 
+	-------------------------- 
+	*/
+	client.preparePage("homework_detail", "homework_detail", function(event) {},  function(event) {});
+	
+	
+	/* 
+	-------------------------- 
+	--- help_page --- 
+	-------------------------- 
+	*/
+	client.preparePage("help", "help", function(event) {},  function(event) {});
+	
+	/* 
+	-------------------------- 
+	--- home_page --- 
+	-------------------------- 
+	*/
+	client.preparePage("home", "member", function(event) {
+	    client.chosenClass = event.target.text;
+        client.isAddingClass = false;
+		// set title of subsequent pages (for next page, it has been set already in preparePage)
+		$("#teacher_page div:jqmData(role=header) h1").text("Teachers of " + client.chosenClass);
+        $("#student_page div:jqmData(role=header) h1").text("Students of " + client.chosenClass);
+        $("#parent_page div:jqmData(role=header) h1").text("Parents of " + client.chosenClass); 		
+	  }, 
+	  function(event) {client.isAddingClass = true;}
+	);
+	
+	$( document ).on ("click","#home_goto_me", function(event) {
+	  if (client.getMyAccessCode() == null) {
+	    //TODO: profile might not yet exist or is not known
+	  }
+	});
+	
+	
+		  $( document ).on ("click","#home_set_code_submit", function(event) {
+		    // access code entered
+			if (client.getMyAccessCode() != null) {
+			  $("#home_set_code_div").hide();
+			  return;
+			}
+			var code1 = $("#home_set_code").val();
+			
+			var email = server.getEmailOfAccessCode(code1);
+			if (email == "?") {
+			  alert("Sorry, try again. If you need help, contact us at opendata4ar@gmail.com");
+			  $("#home_set_code").val("");
+			} else {
+			  client.setMe(email, code1); // authentication successful
+			  var content = server.loadMyClasses(code1);
+			  var main = client.fillContents("home");
+			  main.trigger( "create" );
+			  $("#home_set_code_div").hide();
+			  $("#home_goto_me").show();
+			}
+		  });
+		  
+	if (client.getMyAccessCode() != null) {
+	  $("#home_goto_me").show();
+	}
+	
+	    
+	
+	// Wait for device API libraries to load
+    gap.initialize();
+	
+	</script>
+        
+        <title>My Class: </title>
+    </head>
+    <body>
+  
+  
+	  <!-- 
+	  **************************  
+	  *** home_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="home_page" class="ui-page-theme-b">
+        <div data-role="header">
+          <a href="#help_page" data-icon="info" class="ui-btn-left">Help</a>
+		  <h1>Home</h1>
+		  <a id="home_goto_me" href="#profile_detail_page" data-icon="user" class="ui-btn-right" style="display: none">Me</a><!-- TODO: href=#country_page client.isAddingClass = true -->
+        </div>
+        <div data-role="content">
+          <div member="ui-field-contain">
+            <form member="ui-filterable">
+              <input id="choose_myclass" method="get" action="#URL#" data-type="search" placeholder="search my classes ...">
+            </form> 
+		  </div>
+		  <ul id="choose_home_list" data-role="listview" data-filter="true" data-autodividers="true" data-inset="true" data-input="#choose_myclass"/>
+            
+          		
+		</div>
+		<div id="home_set_code_div">
+		  <!-- form id="home_set_code_form" method="post" action="#" -->
+		    <table width="100%"><tr><td>
+		      <label id="home_set_code_label" for="home_set_code">Enter your access code</label></td><td>
+		      <input id="home_set_code" type="text"></td><td>
+		      <input id="home_set_code_submit" type="submit" action="#URL#" method="get" data-icon="arrow-r" data-iconpos="notext" value="Submit"></td>
+		    </tr></table>
+		  <!--/form-->	
+		</div>
+		<div id="confirm_home_delete" class="ui-content" data-role="popup" style="display: none;">
+		  <p id="delete_home_question">Are you sure you want to delete?</p>
+		  <div class="ui-grid-a">
+		    <div class="ui-block-a"><a id="confirm_home_delete_yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a></div>
+	        <div class="ui-block-b"><a id="confirm_home_delete_cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a></div>
+		  </div>
+		</div>
+		<div data-role="footer">
+        </div>
+      </div>
+
+	  
+	  <!-- 
+	  ***************************  
+	  *** country_page *** 
+	  *************************** 
+	  -->	
+	  <div data-role="page" id="country_page">
+        <div data-role="header" data-add-back-btn="true">
+          <h1>Countries</h1>
+        </div>
+        <div data-role="content">
+            <div class="ui-field-contain">
+              <form class="ui-filterable">
+                <input id="choose_country" data-type="search" placeholder="We live in ...">
+              </form> 
+			</div>
+			<ul id="choose_country_list" data-role="listview" data-filter="true" data-inset="true" data-autodividers="true" data-input="#choose_country">
+        </div>
+		<div data-role="footer">selected:
+        </div>
+      </div>
+	  
+	  <!-- 
+	  ************************  
+	  *** city_page ***
+	  ************************ 
+	  -->
+	  <div data-role="page" id="city_page">
+        <div data-role="header" data-add-back-btn="true">
+          <h1>Cities</h1>
+        </div>
+        <div data-role="content">
+            <div class="ui-field-contain">
+              <form class="ui-filterable">
+                <input id="choose_city" method="get" action="#URL#" data-type="search" placeholder="We live in ...">
+              </form> 
+			</div> 
+			<ul id="choose_city_list" data-role="listview" data-filter="true" data-inset="true" data-autodividers="true" data-input="#choose_city">
+        </div>
+		<div data-role="footer">
+        </div>
+      </div>
+
+	  
+	  <!-- 
+	  **************************  
+	  *** school_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="school_page">
+        <div data-role="header" data-add-back-btn="true">
+          <h1>Schools</h1>
+        </div>
+        <div data-role="content">
+            <div class="ui-field-contain">
+              <form class="ui-filterable">
+                <input id="choose_school" method="get" action="#URL#" data-type="search" placeholder="Our school ...">
+              </form> 
+			</div>
+			<ul id="choose_school_list" data-role="listview" data-filter="true" data-inset="true" data-autodividers="true" data-input="#choose_school">
+        </div>
+		<div data-role="footer">
+        </div>
+      </div>
+
+	  
+	  <!-- 
+	  **************************  
+	  *** class_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="class_page">
+        <div data-role="header" data-add-back-btn="true">
+          <h1>Classes</h1>
+        </div>
+        <div data-role="content">
+            <div class="ui-field-contain">
+              <form class="ui-filterable">
+                <input id="choose_class" method="get" action="#URL#" data-type="search" placeholder="Our class ...">
+              </form> 
+			</div>
+			<ul id="choose_class_list" data-role="listview" data-filter="true" data-inset="true" data-autodividers="true" data-input="#choose_class">
+        </div>
+		<div data-role="footer">
+        </div>
+      </div>
+	 
+	 
+	  <!-- 
+	  **************************  
+	  *** member_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="member_page">
+        <div data-role="header" data-add-back-btn="true">
+          <h1>Class</h1>
+        </div>
+        <div data-role="content">
+            <div member="ui-field-contain">
+              <form member="ui-filterable">
+                <input id="choose_member" method="get" action="#URL#" data-type="search" placeholder="search class contents ...">
+              </form> 
+			</div>
+			<ul id="choose_member_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_member">
+        </div>
+		<div data-role="footer">
+        </div>
+      </div>
+	 
+	 
+	  <!-- 
+	  **************************  
+	  *** parent_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="parent_page">
+        <div data-role="header" data-add-back-btn="true">
+          <h1>Parents</h1>
+        </div>
+        <div data-role="content">
+            <div member="ui-field-contain">
+              <form member="ui-filterable">
+                <input id="choose_parent" method="get" action="#URL#" data-type="search" placeholder="search parents ...">
+              </form> 
+			</div>
+			<ul id="choose_parent_list" data-role="listview" data-filter="true" data-inset="true" data-autodividers="true" data-input="#choose_parent">
+        </div><!-- TODO: do not allow to delete identified members -->
+		<div id="confirm_parent_delete" class="ui-content" data-role="popup" style="display: none;">
+		  <p id="delete_home_question">Are you sure you want to delete?</p>
+		  <div class="ui-grid-a"><div class="ui-block-a"><a id="confirm_parent_delete_yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a></div>
+	      <div class="ui-block-b"><a id="confirm_parent_delete_cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a></div></div>
+		</div>
+		<div data-role="footer">
+        </div>
+      </div>	 
+	 
+	  <!-- 
+	  **************************  
+	  *** teacher_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="teacher_page">
+        <div data-role="header" data-add-back-btn="true">
+          <h1>Teachers</h1>
+        </div>
+        <div data-role="content">
+            <div member="ui-field-contain">
+              <form member="ui-filterable">
+                <input id="choose_teacher" method="get" action="#URL#" data-type="search" placeholder="search teacher ...">
+              </form> 
+			</div>
+			<ul id="choose_teacher_list" data-role="listview" data-filter="true" data-inset="true" data-autodividers="true" data-input="#choose_teacher">
+        </div>
+		<div id="confirm_teacher_delete" class="ui-content" data-role="popup" style="display: none;">
+		  <p id="delete_teacher_question">Are you sure you want to delete?</p>
+		  <div class="ui-grid-a"><div class="ui-block-a"><a id="confirm_teacher_delete_yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a></div>
+	      <div class="ui-block-b"><a id="confirm_teacher_delete_cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a></div></div>
+		</div>
+		<div data-role="footer">
+        </div>
+      </div>	 
+	 
+	  <!-- 
+	  **************************  
+	  *** student_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="student_page">
+        <div data-role="header" data-add-back-btn="true">
+          <h1>Students</h1>
+        </div>
+        <div data-role="content">
+            <div member="ui-field-contain">
+              <form member="ui-filterable">
+                <input id="choose_student" method="get" action="#URL#" data-type="search" placeholder="search student ...">
+              </form> 
+			</div>
+			<ul id="choose_student_list" data-role="listview" data-filter="true" data-inset="true" data-autodividers="true" data-input="#choose_student">
+        </div>
+		<div id="confirm_student_delete" class="ui-content" data-role="popup" style="display: none;">
+		  <p id="delete_student_question">Are you sure you want to delete?</p>
+		  <div class="ui-grid-a"><div class="ui-block-a"><a id="confirm_student_delete_yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a></div>
+	      <div class="ui-block-b"><a id="confirm_student_delete_cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a></div></div>
+		</div>
+		<div data-role="footer">
+        </div>
+      </div>	  
+	  	
+		
+	  <!-- 
+	  **************************  
+	  *** add_member_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="add_member_page">
+        <div data-role="header" data-add-back-btn="true">
+          <h1>Invite to class</h1>
+        </div>
+        <div data-role="content">
+            <div class="ui-field-contain">
+              <form class="ui-filterable">
+                <input id="choose_invite" method="get" action="#URL#" data-type="search" placeholder="search in contacts ...">
+              </form> 
+			</div>
+        </div>
+		<div data-role="footer">
+        </div>
+      </div>
+
+	  
+	  <!-- 
+	  **************************  
+	  *** profile_detail_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="profile_detail_page">
+        <div data-role="header" data-add-back-btn="true">
+          <h1>Profile</h1>
+		  <a id="invite_form" href="#" data-icon="action" class="ui-btn-right">Invite</a>
+        </div>
+        <div data-role="content">
+            <div profile="ui-field-contain">
+              <form profile="ui-filterable">
+                <input id="choose_profile" method="get" action="#URL#" data-type="search" placeholder="search">
+              </form> 
+			</div>
+			<ul id="choose_profile_detail_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_profile">
+        </div>
+		<div id="confirm_profile_detail_delete" class="ui-content" data-role="popup" style="display: none;">
+		  <p id="delete_profile_detail_question">Are you sure you want to delete?</p>
+		  <div class="ui-grid-a"><div class="ui-block-a"><a id="confirm_profile_detail_delete_yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a></div>
+	      <div class="ui-block-b"><a id="confirm_profile_detail_delete_cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a></div></div>
+		</div>
+		<div id="confirm_invite" class="ui-content" data-role="popup" style="display: none;">
+		  <p id="confirm_invite_question">Invite?</p>
+		  <div class="ui-grid-a">
+		    <div class="ui-block-a"><a id="confirm_invite_yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a></div>
+	        <div class="ui-block-b"><a id="confirm_invite_cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a></div>
+		  </div>
+		</div>
+		<div data-role="footer">
+        </div>
+      </div>
+	  
+	  
+	  <!-- 
+	  **************************  
+	  *** homework_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="homework_page">
+        <div data-role="header" data-add-back-btn="true">
+		  <h1>Homework</h1>
+        </div>
+		<div data-role="content">
+            <div class="ui-field-contain">
+              <form class="ui-filterable">
+                <input id="choose_homework" method="get" action="#URL#" data-type="search" placeholder="find homework ...">
+              </form> 
+			</div>
+			<ul id="choose_homework_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_homework"/>
+        </div>
+		<div id="confirm_homework_delete" class="ui-content" data-role="popup" style="display: none;">
+		  <p id="delete_homework_question">Are you sure you want to delete?</p>
+		  <div class="ui-grid-a">
+		    <div class="ui-block-a"><a id="confirm_homework_delete_yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a></div>
+	        <div class="ui-block-b"><a id="confirm_homework_delete_cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a></div>
+		  </div>
+		</div>
+		<div data-role="footer">
+        </div>
+	  </div>
+	  
+	  
+	  <!-- 
+	  ****************************  
+	  *** homework_detail_page *** 
+	  **************************** 
+	  -->
+	  <div data-role="page" id="homework_detail_page">
+        <div data-role="header" data-add-back-btn="true">
+		  <h1>Homework X</h1>
+		  <a id="homework_add_form" href="#" data-icon="check" class="ui-btn-right">Save</a>
+        </div>
+		<div data-role="content">
+          <div class=ui-content>
+	        <form id=choose_homework_detail_list method="post" action="#URL#">
+	          <div class=ui-field-contain>
+	            <label for=homework_title>Title</label><input id=homework_title type=text value='english voci p38'>
+                <label for=homework_due>Due </label><input id=homework_due type=date>
+                <label for=homework_my_progress>My progress</label><input id=homework_my_progress type=range min=0 max=100 value=0 step=5 data-show-value=true>
+                <label for=homework_fach>Subject</label><input id=homework_fach type=text value='english conversation I'>
+                <label for=homework_text>Task</label><textarea id=homework_text placeholder='enter description here (visible to other students)'></textarea>
+                <label for=homework_my_notes>My notes</label><textarea id=homework_my_notes placeholder='enter personal comments here (not visible to other students)'></textarea>
+                <label for=homework_is_private>private</label><input id=homework_is_private type=checkbox>
+                <!-- label class=ui-hidden-accessible for=homework_submit></label><input id=homework_submit type=submit value=collaborate -->
+              </div>
+	        </form>
+	      </div>
+	    </div>
+			
+		<div data-role="footer">
+        </div>
+	  </div>
+	  
+	  
+	  <!-- 
+	  **************************  
+	  *** help_page *** 
+	  ************************** 
+	  -->
+	  <div data-role="page" id="help_page">
+        <div data-role="header">
+          <a href="#home_page" data-icon="info" class="ui-btn-left">Help</a>
+		  <h1>Help</h1>
+        </div>
+		<div data-role="content">
+            <div class="ui-field-contain">
+              <form class="ui-filterable">
+                <input id="choose_help" method="get" action="#URL#" data-type="search" placeholder="search in help ...">
+              </form> 
+			</div>
+        </div>
+		<div data-role="footer">
+        </div>
+	  </div>
+	  
+	  
+	  
+    </body>
+</html>
+
