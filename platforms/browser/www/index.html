@@ -242,16 +242,19 @@
 		  client.chosenCity = event.target.text;
 		  client.chosenKid = $("#add_mykid_name").val();
 	      client.saveEntity("mykid","city", client.chosenKid);
+	      $("#city_page div:jqmData(role=header) h1").text("Schulgemeinde von " + client.chosenKid);
+	      
 		  setHeader("Schulgemeinde von " + client.chosenKid); 
 	    },
 		function(event) {
 		  // addItemCallback new city
 		  client.chosenKid = $("#add_mykid_name").val();
 	      client.saveEntity("mykid","city", client.chosenKid);
-		  setHeader("Schulgemeinde von " + client.chosenKid); 
+	      $("#city_page div:jqmData(role=header) h1").text("Schulgemeinde von " + client.chosenKid);
 	    }
 	); 
-;
+
+
 	
 	
 	/* 

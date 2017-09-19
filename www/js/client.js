@@ -122,7 +122,8 @@ var client = {
 		  contentContainer.append (content);
 		}
 		return main;
-	},	
+	},
+	
 	
 	
 	preparePage: function(page, next, drilldownCallback, addItemCallback) {
@@ -153,15 +154,19 @@ var client = {
 	 
 	    // drill down
 	    if (next != null) {
+	      $.fn.ignore = function(sel){
+		    	  return this.clone().find(sel||">*").remove().end();
+		    	};
 		  $( document ).on("click","#" + page + "_page .ui-icon-carat-r",function(event) {
 			drilldownCallback(event);
 			// Set title of next page
-		    $("#" + next + "_page div:jqmData(role=header) h1").text(event.target.text); 
+		    $("#" + next + "_page div:jqmData(role=header) h1").ignore("span").text(event.target.text); 
+		    
 	      });
 		}
 		// add
 		$(".ui-icon-plus").click(function(event) {
-		  $("#" + next + "_page div:jqmData(role=header) h1").text(event.target.text); 
+		  $("#" + next + "_page div:jqmData(role=header) h1").ignore("span").text(event.target.text); 
 		  addItemCallback(event);
 	    });
 		
