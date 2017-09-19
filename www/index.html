@@ -456,7 +456,7 @@
 			<div member="ui-field-contain">
 				<form member="ui-filterable">
 					<input id="choose_startp" method="get" action="#URL#"
-						data-type="search" placeholder="Suche Name">
+						data-type="search" placeholder="Suche Schüler">
 				</form>
 			</div>
 			<ul id="choose_startp_list" data-role="listview" data-filter="true"
@@ -647,8 +647,8 @@
 			<h1>Class</h1>
 		</div>
 		<div data-role="content">
-			<div member="ui-field-contain">
-				<form member="ui-filterable">
+			<div class="ui-field-contain">
+				<form class="ui-filterable">
 					<input id="choose_member" method="get" action="#URL#"
 						data-type="search" placeholder="search class contents ...">
 				</form>
@@ -670,8 +670,8 @@
 			<h1>Parents</h1>
 		</div>
 		<div data-role="content">
-			<div member="ui-field-contain">
-				<form member="ui-filterable">
+			<div class="ui-field-contain">
+				<form class="ui-filterable">
 					<input id="choose_parent" method="get" action="#URL#"
 						data-type="search" placeholder="search parents ...">
 				</form>
@@ -708,8 +708,8 @@
 			<h1>Teachers</h1>
 		</div>
 		<div data-role="content">
-			<div member="ui-field-contain">
-				<form member="ui-filterable">
+			<div class="ui-field-contain">
+				<form class="ui-filterable">
 					<input id="choose_teacher" method="get" action="#URL#"
 						data-type="search" placeholder="search teacher ...">
 				</form>
@@ -745,8 +745,8 @@
 			<h1>Students</h1>
 		</div>
 		<div data-role="content">
-			<div member="ui-field-contain">
-				<form member="ui-filterable">
+			<div class="ui-field-contain">
+				<form class="ui-filterable">
 					<input id="choose_student" method="get" action="#URL#"
 						data-type="search" placeholder="search student ...">
 				</form>
@@ -817,11 +817,15 @@
 		
 		<div data-role="content">
 		  Schulgemeinde
-		  <ul id="choose_add_mykid_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_add_mycity"/>
+		  <div class="ui-field-contain">
+		    <form class="ui-filterable">
+		      <input id="choose_add_mykid" method="get" action="#URL#"data-type="search" placeholder="Ort">
+		      
+		      <ul id="choose_add_mykid_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_add_mykid"/>
+		    </form>
+		  </div>
 		</div>
-		<div id="add_mykid_div">
-
-		</div>
+				  
 		<div data-role="footer"></div>
 	</div>
 
@@ -837,7 +841,7 @@
 			<a id="invite_form" href="#" data-icon="action" class="ui-btn-right">Invite</a>
 		</div>
 		<div data-role="content">
-			<div profile="ui-field-contain">
+			<div class="ui-field-contain">
 				<form profile="ui-filterable">
 					<input id="choose_profile" method="get" action="#URL#"
 						data-type="search" placeholder="search">

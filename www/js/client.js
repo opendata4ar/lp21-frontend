@@ -139,13 +139,11 @@ var client = {
 		  var addForm = client.loadFormAddEntityNoInput("mykid", "add_mykid", "Schüler");
 	    } else if (page == "home") {
 	      var addForm = client.loadFormAddEntityNoInput("home", "country", "class");
-		} else if (page == "add_mykid") {
-			var addForm = client.loadFormAddEntityNoInput("city", "city", "Schulgemeinde");
 		} else if (page == "profile_detail") {
 		  var addForm = client.loadFormAddEntityKeyValue(page, next, "detail", "value");
 		} else if (page == "student" || page == "teacher" || page == "parent") {
 		  var addForm = client.loadFormAddEntityNoInput(page, "add_member", page);
-		} else if (page == "member" || page == "help" || page == "homework_detail") {
+		} else if (page == "member" || page == "help" || page == "homework_detail" || page == "add_mykid") {
 		  var addForm = "<div/>";
 		} else {
 		  var addForm = client.loadFormAddEntitySingleInput(page, next);

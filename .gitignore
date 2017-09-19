@@ -19,3 +19,5 @@ platforms/browser/build/package.zip
 platforms/browser/build/package.zip
 *.zip
 platforms/browser/build/package.zip
+debug.log
+*.zip
