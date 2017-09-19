@@ -5,7 +5,7 @@
 var server = {
 
     load: function(entity, accessCode) {
-	  if (entity == "home") {
+	  if (entity == "startp") {
 	    return this.loadMyKids(accessCode);
 	  } else if (entity == "home") {
 		return this.loadMyClasses(accessCode);
@@ -182,7 +182,7 @@ var server = {
 	  return profile_list;
 	},
 	
-	loadMyClasses: function(accessCode) {
+	loadMyKids: function(accessCode) {
 	  var my_kids = ""; // FIXME: search for kids having parent with email as member
 	  var email = this.getEmailOfAccessCode(accessCode);
 	  if (email != "?") {
