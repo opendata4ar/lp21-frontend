@@ -45,3 +45,4 @@ platforms/browser/www/js/client.js
 platforms/browser/www/js/server-mock.js
 platforms/browser/build/package.zip
 *.zip
+platforms/browser/www/snip.json
