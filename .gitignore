@@ -36,3 +36,7 @@ platforms/browser/build/package.zip
 *.zip
 www/snip.json
 *.zip
+platforms/browser/www/index.html
+platforms/browser/www/index.html
+platforms/browser/www/js/client.js
+platforms/browser/www/js/server-mock.js
