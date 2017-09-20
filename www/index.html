@@ -19,13 +19,13 @@
 		
         <script>
 	
-	$( document ).ajaxError(function( event, request, settings, error ) {
-      // global ajax error handling
-      var httpStatusCode = request.getResponseHeader("status"); // It is worth noting that browsers report a status of 0 in case of XMLHttpRequest errors too. https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/status
-      var clientMsg = "Got error " + error + "\n on " + settings.type + " " + settings.url + "\n from app " + event.currentTarget.URL + " \n " + request.status + " " + request.statusText + " (" + httpStatusCode + ")";
-      alert(clientMsg); //FIXME: remove, log 
-      $( "div div:jqmData(role=footer)" ).append( "<li><font color='red'>" + clientMsg + "</font></li>" );
-    });
+$( document ).ajaxError(function( event, request, settings, error ) {
+  // global ajax error handling
+  var httpStatusCode = request.getResponseHeader("status"); // It is worth noting that browsers report a status of 0 in case of XMLHttpRequest errors too. https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/status
+  var clientMsg = "Got error " + error + "\n on " + settings.type + " " + settings.url + "\n from app " + event.currentTarget.URL + " \n " + request.status + " " + request.statusText + " (" + httpStatusCode + ")";
+  alert(clientMsg); //FIXME: remove, log 
+  $( "div div:jqmData(role=footer)" ).append( "<li><font color='red'>" + clientMsg + "</font></li>" );
+});
     
 	// Respond to back/forward navigation
 $( window ).on( "navigate", function( event, data ){
@@ -360,13 +360,6 @@ $( window ).on( "navigate", function( event, data ){
 	*/
 	client.preparePage("help", "help", function(event) {},  function(event) {});
 	
-	$( document ).on ("click","#help", function(event) {
-	  alert("help: loading data..."); //FIXME: delete this ajax test
-	  $.get( "http://localhost:8081/lp21/city/10", "", function( data ) {
-      	  alert( "... data loaded: \n " + JSON.stringify(data) );
-      });
-	});
-	
 	
 	/* 
 	-------------------------- 
@@ -443,7 +436,7 @@ $( window ).on( "navigate", function( event, data ){
 	  -->
 	<div data-role="page" id="startp_page" class="ui-page-theme-b">
 		<div data-role="header">
-			<a id="help" href="#help_page" data-icon="bars" class="ui-btn-left" style="display: ">mehr</a>
+			<a id="help" href="#help_page" data-icon="bars" class="ui-btn-left" style="display: none">mehr</a>
 			<h1>Schule21</h1>
 			<a id="reset" href="#reset" data-icon="refresh" class="ui-btn-right">reset</a>
 		</div>
@@ -812,9 +805,10 @@ $( window ).on( "navigate", function( event, data ){
 		  Schulgemeinde
 		  <div class="ui-field-contain">
 		    <form class="ui-filterable">
-		      <input id="choose_add_mykid" method="get" action="#URL#"data-type="search" placeholder="Ort">
-		      
-		      <ul id="choose_add_mykid_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_add_mykid"/>
+		      <input id="choose_add_mykid" method="get" action="#URL#" data-type="search" placeholder="Ort">
+		      <div id="choose_add_mykid_list_parent">
+		        <ul id="choose_add_mykid_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_add_mykid"/>
+		      </div>
 		    </form>
 		  </div>
 		</div>
