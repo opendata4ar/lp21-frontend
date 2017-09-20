@@ -63,7 +63,7 @@ var client = {
 	
 	
     loadFormAddEntityNoInput: function(entity, gotoPage, entityLabel) {
-	  var form = "";
+	  var form = ""; // add_mykid_page => add_city form
 	  form += "<form id=add_" + entity + "_form method=post action=#URL# style='display: '><div class=ui-field-contain>";
 	  form +=   "<table style=width:100%><tr><td>";
 	  form +=     "<label for=add_" + entity + "_button>" + entityLabel + " hinzufügen</label>";
@@ -109,16 +109,17 @@ var client = {
       popup_html += "</div>";
 	  return popup_html;
 	},
+	
 	fillContents: function(page) {
 	    // clean and re-populate the list (TODO: connect again?)
 		var content = server.load(page, client.getMyAccessCode());
 		var main = $("#" + page + "_page div:jqmData(role=content)");
 		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
 		if (contentContainer == undefined || contentContainer.length == 0) {
-		  main.append(content);
+		  main.append(content).trigger("create");
 		} else {
 		  contentContainer.empty();
-		  contentContainer.append (content);
+		  contentContainer.append (content).trigger("create");
 		}
 		return main;
 	},
@@ -126,16 +127,18 @@ var client = {
 	fill: function(page, entity) {
 		var content = server.load(entity, client.getMyAccessCode());
 		// fix data-input
-		content = content.replace("data-input='#choose_" + entity, "data-input='#choose_" + page);
+		// content = content.replace("data-input='#choose_" + entity + "'", "id='choose_add_mykid_list' data-autodividers='true' data-input='#choose_" + page + "' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'");
+		content = content.replace("data-input='#choose_" + entity + "'", "id='choose_add_mykid_list' data-input='#choose_" + page + "' ");
+		
 		var main = $("#" + page + "_page div:jqmData(role=content)");
 		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
-		alert(content);
 		if (contentContainer == undefined || contentContainer.length == 0) {
-		  main.append(content);
+		  main.append(content).trigger("create");
 		} else {
 		  contentContainer.empty();
-		  contentContainer.append (content);
-		} 
+		  contentContainer.append (content).trigger("create");
+		}
+		$("#add_mykid_page #add_city_form").hide();
 		return main;
 	},
 	
@@ -154,7 +157,7 @@ var client = {
 	    } else if (page == "home") {
 	      var addForm = client.loadFormAddEntityNoInput("home", "country", "class");
 	    } else if (page == "add_mykid") {
-			var addForm = client.loadFormAddEntityNoInput("city", "city", "Schulgemeinde");
+			var addForm = client.loadFormAddEntityNoInput("city", "add_mykid", "Schulgemeinde");
 			if (client.getMyEmail() == undefined) {
 				addForm = addForm.replace("style='display: '", "style='display: none'"); // hide, all cities are shown anyway
 			}
@@ -275,6 +278,8 @@ var client = {
 	      client.saveEntity("mykid","city", client.chosenKid);
 	      $("#city_page div:jqmData(role=header) h1").text("Schulgemeinde von " + client.chosenKid);
 	      client.fill("add_mykid", "city"); //show all cities
+		  $("#add_mykid_page #add_city_form").hide();
+		  
 	    });
 	},
 	
