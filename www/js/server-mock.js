@@ -53,6 +53,9 @@ var server = {
 	loadCities: function() {
 	  var city_list = ""; //FIXME: add id to ul?
       city_list += "<ul data-role=listview data-filter=true data-inset=true data-autodividers=true data-input='#choose_city'>";
+      //$.get( "http://localhost:8081/lp21/4", "", function( data ) {
+      //	  alert( "Data loaded: " + data );
+      //});
       city_list +=   "<li><a href=#school_page>Bern</a></li>";
       city_list +=   "<li><a href=#school_page>Burgdorf<span class=ui-li-count> 6</span></a></li>";
       city_list +=   "<li><a href=#school_page>Jegenstorf</a></li>";
@@ -188,10 +191,12 @@ var server = {
 		  var my_cities = ""; // FIXME: search for kids having parent with email as member
 		  var email = this.getEmailOfAccessCode(accessCode);
 		  if (email != "?") {
+			// get cities already in use
 			my_cities += "<ul id=choose_add_mykid_list data-role=listview data-filter=true data-inset=true data-input=#choose_add_mykid>";
 			my_cities +=   "<li data-filtertext='Burgdorf'><a href=#school_page>Burgdorf<span class=ui-li-count>2</span></a></li>";
 			my_cities += "</ul>"; //FIXME: keep this data local (or get earlier, e.g. loadMyClasses
 		  } else {
+			  // get all cities
 			  var cities = server.loadCities();
 			  cities = cities.replace("#choose_city", "#choose_add_mykid");
 			  return cities;
