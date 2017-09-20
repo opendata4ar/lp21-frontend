@@ -13,6 +13,8 @@ var server = {
 	    return this.loadCountries();
 	  } else if (entity == "city") {
 	    return this.loadCities();
+	  } else if (entity == "add_mykid") {
+		return this.loadMyCities(accessCode);
 	  } else if (entity == "school") {
 	    return this.loadSchools();
 	  } else if (entity == "class") {
@@ -182,14 +184,31 @@ var server = {
 	  return profile_list;
 	},
 	
+	loadMyCities: function(accessCode) {
+		  var my_cities = ""; // FIXME: search for kids having parent with email as member
+		  var email = this.getEmailOfAccessCode(accessCode);
+		  if (email != "?") {
+			my_cities += "<ul id=choose_add_mykid_list data-role=listview data-filter=true data-inset=true data-input=#choose_add_mykid>";
+			my_cities +=   "<li data-filtertext='Burgdorf'><a href=#city_page>Burgdorf<span class=ui-li-count>2</span></a></li>";
+			my_cities += "</ul>"; //FIXME: keep this data local (or get earlier, e.g. loadMyClasses
+		  } else {
+			  var cities = server.loadCities();
+			  cities = cities.replace("#choose_city", "#choose_add_mykid");
+			  return cities;
+		  }
+		  return my_cities;
+		},
+		
+		
+	
 	loadMyKids: function(accessCode) {
 	  var my_kids = ""; // FIXME: search for kids having parent with email as member
 	  var email = this.getEmailOfAccessCode(accessCode);
 	  if (email != "?") {
 		my_kids += "<ul id=choose_startp_list data-role=listview data-filter=true data-autodividers=true data-inset=true data-input=#choose_startp>";
-		my_kids +=   "<li data-filtertext='Alex'><a href=#member_page>Alex<span class=ui-li-count>3</span></a></li>";
-		my_kids +=   "<li data-filtertext='Remo'><a href=#member_page>Remo<span class=ui-li-count>1</span></a></li>";
-		my_kids += "</ul>";
+		my_kids +=   "<li data-filtertext='Alex'><a href=#mykid_page>Alex<span class=ui-li-count>3</span></a></li>";
+		my_kids +=   "<li data-filtertext='Remo'><a href=#mykid_page>Remo<span class=ui-li-count>1</span></a></li>";
+		my_kids += "</ul>"; //FIXME: define #mykid_page
 	  }
 	  return my_kids;
 	},

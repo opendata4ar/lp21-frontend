@@ -20,7 +20,21 @@
         <script>
 	
 	
-	
+	// Respond to back/forward navigation
+$( window ).on( "navigate", function( event, data ){
+  if( data.state.foo ){
+    // Make use of the arbitrary data stored
+  }
+
+  if( data.state.direction == "back" ) {
+    // Make use of the directional information
+  }
+
+  // reset the content based on the url
+  // alert(data.state.url); yields "http://host/index.html" resp. "http://host/index.html#xyz_page"
+  //client.prepareMyKidPage();
+  
+});
 	
 	/* 
 	--------------------------- 
@@ -142,12 +156,7 @@
 	  }
 	);	 
 
-    function setHeader(person) {
-	  $("#profile_detail_page div:jqmData(role=header) h1").text(person);
-	  if (client.getMyAccessCode() == null) {
-	    $("#profile_detail_page div:jqmData(role=header) a").text("That's me!");
-	  }
-	}
+    
 	
 	
 	/* 
@@ -235,24 +244,8 @@
 	--- add_mykid_page --- 
 	--------------------------- 
 	*/	
-
-	client.preparePage("add_mykid", "city", function(event) {
-	      // drilldown into city
-	      client.saveEntity("city","school", event.target.text);
-		  client.chosenCity = event.target.text;
-		  client.chosenKid = $("#add_mykid_name").val();
-	      client.saveEntity("mykid","city", client.chosenKid);
-	      $("#city_page div:jqmData(role=header) h1").text("Schulgemeinde von " + client.chosenKid);
-	      
-		  setHeader("Schulgemeinde von " + client.chosenKid); 
-	    },
-		function(event) {
-		  // addItemCallback new city
-		  client.chosenKid = $("#add_mykid_name").val();
-	      client.saveEntity("mykid","city", client.chosenKid);
-	      $("#city_page div:jqmData(role=header) h1").text("Schulgemeinde von " + client.chosenKid);
-	    }
-	); 
+    
+	client.prepareMyKidPage();
 
 
 	
@@ -307,6 +300,13 @@
 		  server.invite(client.chosenPerson,email,client.chosenRole,client.chosenClass);
 		});
 		
+	  }
+	}
+	
+	function setHeader(person) {
+	  $("#profile_detail_page div:jqmData(role=header) h1").text(person);
+	  if (client.getMyAccessCode() == null) {
+	    $("#profile_detail_page div:jqmData(role=header) a").text("That's me!");
 	  }
 	}
 
@@ -386,48 +386,9 @@
 	--- home_page parents  --- 
 	-------------------------- 
 	*/
-	client.preparePage("startp", "add_mykid", function(event) {
-	    client.chosenClass = event.target.text;
-        client.isAddingClass = false;
-		//TODO set title of subsequent pages (for next page, it has been set already in preparePage)
-		$("#teacher_page div:jqmData(role=header) h1").text("Teachers of " + client.chosenClass);
-        $("#student_page div:jqmData(role=header) h1").text("Students of " + client.chosenClass);
-        $("#parent_page div:jqmData(role=header) h1").text("Parents of " + client.chosenClass); 		
-	  }, 
-	  function(event) {client.isAddingClass = true;}
-	);
-	
-	$( document ).on ("click","#reset", function(event) {
-	    alert("You loose all your data when clocking OK! Contact us at opendata4ar@gmail.com");
-		client.reset();
-	    $("#startp_set_code").val("");
-		var main = client.fillContents("startp");
-		$("#startp_set_code_div").show();
-		main.trigger( "create" );
-	});
+	client.prepareHomePageParents();
 	
 	
-	$( document ).on ("click","#startp_set_code_submit", function(event) {
-	  // access code entered
-	  if (client.getMyAccessCode() != null) {
-	    $("#startp_set_code_div").hide();
-		  return;
-		}
-		var code1 = $("#startp_set_code").val();
-			
-		var email = server.getEmailOfAccessCode(code1);
-		if (email == "?") {
-		  alert("Sorry, try again. If you need help, contact us at opendata4ar@gmail.com");
-		  $("#startp_set_code").val("");
-		} else {
-		  client.setMe(email, code1); // authentication successful
-		  var content = server.loadMyKids(code1);
-		  var main = client.fillContents("startp");
-		  main.trigger( "create" );
-		  $("#startp_set_code_div").hide();
-		  
-		}
-	});
 		  
 		 
 	    
@@ -805,13 +766,12 @@
 			<!-- a id="save_mykid_form" href="#" data-icon="check" class="ui-btn-right">OK</a -->
 		</div>
 		
-		<div>
+		<div id="add_mykid_name_form">
+		<p>
 		  <!-- form id="add_mykid_form" method="post" action="#" -->
-		  <table width="100%">
-			<tr><td><label id="add_mykid_name_label" for="add_mykid_name">Name</label></td>
-				<td><input id="add_mykid_name" type="text" placeholder="z.B. Neo"></td>
-			</tr>
-		  </table>
+		    <label id="add_mykid_name_label" for="add_mykid_name">Name </label>
+			<input id="add_mykid_name" type="text" placeholder="z.B. Neo">
+		</p>	
 		  <!--/form-->
 		</div>
 		

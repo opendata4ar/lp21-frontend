@@ -109,7 +109,6 @@ var client = {
       popup_html += "</div>";
 	  return popup_html;
 	},
-	
 	fillContents: function(page) {
 	    // clean and re-populate the list (TODO: connect again?)
 		var content = server.load(page, client.getMyAccessCode());
@@ -120,6 +119,24 @@ var client = {
 		} else {
 		  contentContainer.empty();
 		  contentContainer.append (content);
+		}
+		return main;
+	},
+	
+	fill: function(page, entity) {
+		var content = server.load(entity, client.getMyAccessCode());
+		//fix data-input
+		
+		var main = $("#" + page + "_page div:jqmData(role=content)");
+		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
+		if (contentContainer == undefined || contentContainer.length == 0) {
+		  main.append(content);
+		} else if (contentContainer.length == 1) {
+		  contentContainer.empty();
+		  contentContainer.append (content);
+		} else {
+			alert("multiple contentContainers<br/> " + contentContainer.html());
+			//FIXME: sometimes identical <ul> are nested into each other???
 		}
 		return main;
 	},
@@ -139,11 +156,13 @@ var client = {
 		  var addForm = client.loadFormAddEntityNoInput("mykid", "add_mykid", "Schüler");
 	    } else if (page == "home") {
 	      var addForm = client.loadFormAddEntityNoInput("home", "country", "class");
+	    } else if (page == "add_mykid") {
+			var addForm = client.loadFormAddEntityNoInput("city", "city", "Schulgemeinde");
 		} else if (page == "profile_detail") {
 		  var addForm = client.loadFormAddEntityKeyValue(page, next, "detail", "value");
 		} else if (page == "student" || page == "teacher" || page == "parent") {
 		  var addForm = client.loadFormAddEntityNoInput(page, "add_member", page);
-		} else if (page == "member" || page == "help" || page == "homework_detail" || page == "add_mykid") {
+		} else if (page == "member" || page == "help" || page == "homework_detail") {
 		  var addForm = "<div/>";
 		} else {
 		  var addForm = client.loadFormAddEntitySingleInput(page, next);
@@ -190,8 +209,78 @@ var client = {
 
 		}
 	  });
-	  
-	  
+	},
+	
+	prepareHomePageParents: function() {
+	  var page ="startp";
+	  var next = "add_mykid";
+	  client.preparePage(page, next,
+		function(event) {
+		    client.chosenClass = event.target.text;
+	        client.isAddingClass = false;
+			//TODO set title of subsequent pages (for next page, it has been set already in preparePage)
+			$("#teacher_page div:jqmData(role=header) h1").text("Teachers of " + client.chosenClass);
+	        $("#student_page div:jqmData(role=header) h1").text("Students of " + client.chosenClass);
+	        $("#parent_page div:jqmData(role=header) h1").text("Parents of " + client.chosenClass); 		
+		  }, 
+		  function(event) {client.isAddingClass = true;}
+		);
+		
+		$( document ).on ("click","#reset", function(event) {
+		    // "reset" button (dev only)
+			alert("You loose all your data when clicking OK! Contact us at opendata4ar@gmail.com");
+			client.reset();
+		    $("#startp_set_code").val("");
+			var main = client.fillContents("startp");
+			$("#startp_set_code_div").show();
+			$("#add_mykid_page #add_city_form").hide();
+			main.trigger( "create" );
+		});
+		
+		
+		$( document ).on ("click","#startp_set_code_submit", function(event) {
+		  // access code entered
+		  if (client.getMyAccessCode() != null) {
+		    $("#startp_set_code_div").hide();
+			  return;
+			}
+			var code1 = $("#startp_set_code").val();
+				
+			var email = server.getEmailOfAccessCode(code1);
+			if (email == "?") {
+			  alert("Sorry, try again. If you need help, contact us at opendata4ar@gmail.com");
+			  $("#startp_set_code").val("");
+			} else {
+			  client.setMe(email, code1); // authentication successful
+			  var content = server.loadMyKids(code1);
+			  var main = client.fillContents("startp");
+			  main.trigger( "create" );
+			  $("#startp_set_code_div").hide();
+			  $("#add_mykid_page #add_city_form").show();
+			}
+		});
+	},
+	
+	prepareMyKidPage: function() {
+	    var page ="add_mykid";
+	    var next = "city";
+	    client.preparePage(page, next,
+	    function(event) {
+		  // drilldown into city
+	      client.saveEntity("city","school", event.target.text);
+		  client.chosenCity = event.target.text;
+		  client.chosenKid = $("#add_mykid_name").val();
+	      client.saveEntity("mykid","city", client.chosenKid);
+	      $("#city_page div:jqmData(role=header) h1").text("Schulgemeinde von " + client.chosenKid);
+	      
+	    },
+		function(event) {
+		  // addItemCallback new city
+		  client.chosenKid = $("#add_mykid_name").val();
+	      client.saveEntity("mykid","city", client.chosenKid);
+	      $("#city_page div:jqmData(role=header) h1").text("Schulgemeinde von " + client.chosenKid);
+	      //client.fill("add_mykid", "city"); //show all cities FIXME: data-input is wrong 
+	    });
 	},
 	
 	confirmAndDelete: function(page, listitem, transition ) {

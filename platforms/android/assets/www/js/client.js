@@ -66,7 +66,7 @@ var client = {
 	  var form = "";
 	  form += "<form id=add_" + entity + "_form method=post action=#URL#><div class=ui-field-contain>";
 	  form +=   "<table style=width:100%><tr><td>";
-	  form +=     "<label for=add_" + entity + "_button>add another " + entityLabel + "</label>";
+	  form +=     "<label for=add_" + entity + "_button>" + entityLabel + " hinzufügen</label>";
 	  form +=   "</td><td align=right><a href=#" + gotoPage + "_page>";
 	  form +=     "<input id=add_" + entity + "_button type=submit data-icon=plus data-iconpos=notext value=Submit/>"
 	  form += "</a></td></table></div></form>";
@@ -77,7 +77,7 @@ var client = {
 	  var form = "";
 	  form += "<form id='add_" + entity + "_form' method=post action=#URL#><div class=ui-field-contain>";
 	  form +=   "<table style=width:100%><tr><td>";
-	  form +=     "<input id='add_" + entity + "_text' type=text placeholder='add another " + entity + " here'>";
+	  form +=     "<input id='add_" + entity + "_text' type=text placeholder='" + entity + " hinzufügen'>";
 	  form +=   "</td><td align=right><a href=#" + gotoPage + "_page>";
 	  form +=     "<input type=submit data-icon=plus data-iconpos=notext value=Submit/>"
 	  form += "</a></td></table></div></form>";
@@ -109,7 +109,6 @@ var client = {
       popup_html += "</div>";
 	  return popup_html;
 	},
-	
 	fillContents: function(page) {
 	    // clean and re-populate the list (TODO: connect again?)
 		var content = server.load(page, client.getMyAccessCode());
@@ -122,7 +121,21 @@ var client = {
 		  contentContainer.append (content);
 		}
 		return main;
-	},	
+	},
+	
+	fill: function(page, entity) {
+		var content = server.load(entity, client.getMyAccessCode());
+		var main = $("#" + page + "_page div:jqmData(role=content)");
+		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
+		if (!contentContainer) {
+		  main.append(content);
+		} else {
+		  contentContainer.empty();
+		  contentContainer.append (content);
+		}
+		return main;
+	},
+	
 	
 	
 	preparePage: function(page, next, drilldownCallback, addItemCallback) {
@@ -135,9 +148,11 @@ var client = {
 		
 		// TODO: refactor
 	    if (page == "startp") {
-		  var addForm = client.loadFormAddEntityNoInput("member", "add_member", "Schüler");
+		  var addForm = client.loadFormAddEntityNoInput("mykid", "add_mykid", "Schüler");
 	    } else if (page == "home") {
 	      var addForm = client.loadFormAddEntityNoInput("home", "country", "class");
+	    } else if (page == "add_mykid") {
+			var addForm = client.loadFormAddEntityNoInput("city", "city", "Schulgemeinde");
 		} else if (page == "profile_detail") {
 		  var addForm = client.loadFormAddEntityKeyValue(page, next, "detail", "value");
 		} else if (page == "student" || page == "teacher" || page == "parent") {
@@ -151,17 +166,22 @@ var client = {
 	 
 	    // drill down
 	    if (next != null) {
+	      $.fn.ignore = function(sel){
+		    	  return this.clone().find(sel||">*").remove().end();
+		    	};
 		  $( document ).on("click","#" + page + "_page .ui-icon-carat-r",function(event) {
 			drilldownCallback(event);
 			// Set title of next page
-		    $("#" + next + "_page div:jqmData(role=header) h1").text(event.target.text); 
+		    $("#" + next + "_page div:jqmData(role=header) h1").ignore("span").text(event.target.text); 
+		    
 	      });
 		}
 		// add
 		$(".ui-icon-plus").click(function(event) {
-		  $("#" + next + "_page div:jqmData(role=header) h1").text(event.target.text); 
+		  $("#" + next + "_page div:jqmData(role=header) h1").ignore("span").text(event.target.text); 
 		  addItemCallback(event);
 	    });
+		
 		
 		// Swipe to remove list item
 		//var html = client.addDeletePopup(page);
