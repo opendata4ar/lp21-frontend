@@ -247,7 +247,26 @@ $( window ).on( "navigate", function( event, data ){
     
 	client.prepareMyKidPage();
 
-
+    $(document).on("pagecreate","#add_mykid_page",function(){
+      //register validation for name
+      $("#add_mykid_name").focus(function(){
+        $('#add_mykid_name').next(".red").remove();
+        $('#add_mykid_name').val("");
+      });
+      $("#add_mykid_name").blur(function(){
+        var name=$('#add_mykid_name').val();
+        if(name == undefined || name.replace(" ","").length < 1){
+          //$('#add_mykid_name').color("Bitte hier den Namen eingeben");
+          $('#add_mykid_name').after('<div class="red"><font color="red"> Bitte Name des Schülers eingeben</font></div>');
+          $("#add_mykid_page #choose_add_mykid_city").hide();
+        } else {
+          $('#add_mykid_name').next(".red").remove();
+          $("#add_mykid_page #choose_add_mykid_city").show();
+          return true;
+        }
+      });
+    });
+    
 	
 	
 	/* 
@@ -427,7 +446,7 @@ $( window ).on( "navigate", function( event, data ){
 
 		</div>
 
-		<div id="startp_set_code_div">
+		<div id="startp_set_code_div" style="display: none">
 			<!-- form id="startp_set_code_form" method="post" action="#" -->
 			<table width="100%">
 				<tr>
@@ -767,15 +786,14 @@ $( window ).on( "navigate", function( event, data ){
 		</div>
 		
 		<div id="add_mykid_name_form">
-		<p>
 		  <!-- form id="add_mykid_form" method="post" action="#" -->
-		    <label id="add_mykid_name_label" for="add_mykid_name">Name </label>
-			<input id="add_mykid_name" type="text" placeholder="z.B. Neo">
+		    <label id="add_mykid_name_label" for="add_mykid_name"> Name </label>
+			<input id="add_mykid_name" type="text" placeholder="Schüler" style="color: white">
 		</p>	
 		  <!--/form-->
 		</div>
 		
-		<div data-role="content">
+		<div id="choose_add_mykid_city" data-role="content" style="display: none">
 		  Schulgemeinde
 		  <div class="ui-field-contain">
 		    <form class="ui-filterable">

@@ -63,8 +63,8 @@ var client = {
 	
 	
     loadFormAddEntityNoInput: function(entity, gotoPage, entityLabel) {
-	  var form = "";
-	  form += "<form id=add_" + entity + "_form method=post action=#URL#><div class=ui-field-contain>";
+	  var form = ""; // add_mykid_page => add_city form
+	  form += "<form id=add_" + entity + "_form method=post action=#URL# style='display: '><div class=ui-field-contain>";
 	  form +=   "<table style=width:100%><tr><td>";
 	  form +=     "<label for=add_" + entity + "_button>" + entityLabel + " hinzufügen</label>";
 	  form +=   "</td><td align=right><a href=#" + gotoPage + "_page>";
@@ -109,30 +109,36 @@ var client = {
       popup_html += "</div>";
 	  return popup_html;
 	},
+	
 	fillContents: function(page) {
 	    // clean and re-populate the list (TODO: connect again?)
 		var content = server.load(page, client.getMyAccessCode());
 		var main = $("#" + page + "_page div:jqmData(role=content)");
 		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
-		if (!contentContainer) {
-		  main.append(content);
+		if (contentContainer == undefined || contentContainer.length == 0) {
+		  main.append(content).trigger("create");
 		} else {
 		  contentContainer.empty();
-		  contentContainer.append (content);
+		  contentContainer.append (content).trigger("create");
 		}
 		return main;
 	},
 	
 	fill: function(page, entity) {
 		var content = server.load(entity, client.getMyAccessCode());
+		// fix data-input
+		// content = content.replace("data-input='#choose_" + entity + "'", "id='choose_add_mykid_list' data-autodividers='true' data-input='#choose_" + page + "' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'");
+		content = content.replace("data-input='#choose_" + entity + "'", "id='choose_add_mykid_list' data-input='#choose_" + page + "' ");
+		
 		var main = $("#" + page + "_page div:jqmData(role=content)");
 		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
-		if (!contentContainer) {
-		  main.append(content);
+		if (contentContainer == undefined || contentContainer.length == 0) {
+		  main.append(content).trigger("create");
 		} else {
 		  contentContainer.empty();
-		  contentContainer.append (content);
+		  contentContainer.append (content).trigger("create");
 		}
+		$("#add_mykid_page #add_city_form").hide();
 		return main;
 	},
 	
@@ -145,14 +151,16 @@ var client = {
 		
 		var addForm = $("#" + page + "_page div:jqmData(role=content) #add_" + page + "_form");
 		addForm.remove();
-		
 		// TODO: refactor
 	    if (page == "startp") {
 		  var addForm = client.loadFormAddEntityNoInput("mykid", "add_mykid", "Schüler");
 	    } else if (page == "home") {
 	      var addForm = client.loadFormAddEntityNoInput("home", "country", "class");
 	    } else if (page == "add_mykid") {
-			var addForm = client.loadFormAddEntityNoInput("city", "city", "Schulgemeinde");
+			var addForm = client.loadFormAddEntityNoInput("city", "add_mykid", "Schulgemeinde");
+			if (client.getMyEmail() == undefined) {
+				addForm = addForm.replace("style='display: '", "style='display: none'"); // hide, all cities are shown anyway
+			}
 		} else if (page == "profile_detail") {
 		  var addForm = client.loadFormAddEntityKeyValue(page, next, "detail", "value");
 		} else if (page == "student" || page == "teacher" || page == "parent") {
@@ -162,7 +170,8 @@ var client = {
 		} else {
 		  var addForm = client.loadFormAddEntitySingleInput(page, next);
 		}
-	    main.append (addForm).trigger( "create" );
+	    
+	    main.append(addForm).trigger( "create" );
 	 
 	    // drill down
 	    if (next != null) {
@@ -204,8 +213,76 @@ var client = {
 
 		}
 	  });
-	  
-	  
+	},
+	
+	prepareHomePageParents: function() {
+	  var page ="startp";
+	  var next = "add_mykid";
+	  client.preparePage(page, next,
+		function(event) {
+			//TODO set title of subsequent pages (for next page, it has been set already in preparePage)		
+		  }, 
+		  function(event) {}
+		);
+		
+		$( document ).on ("click","#reset", function(event) {
+		    // "reset" button clicked (dev only)
+			alert("You loose all your data when clicking OK! Contact us at opendata4ar@gmail.com");
+			client.reset();
+		    $("#startp_set_code").val("");
+			var main = client.fillContents("startp");
+			$("#startp_set_code_div").show();
+			$("#add_mykid_page #add_city_form").hide();
+			$("#startp_search").hide(); // leer = keine suche
+			main.trigger( "create" );
+		});
+		
+		$( document ).on ("click","#startp_set_code_submit", function(event) {
+		  // access code entered
+		  if (client.getMyAccessCode() != null) {
+		    $("#startp_set_code_div").hide();
+			$("#startp_search").show(); // suche anzeigen
+			return;
+		  }
+		  var code1 = $("#startp_set_code").val();	
+		  var email = server.getEmailOfAccessCode(code1);
+		  if (email == "?") {
+			alert("Sorry, try again. If you need help, contact us at opendata4ar@gmail.com");
+			$("#startp_set_code").val("");
+		  } else {
+			client.setMe(email, code1); // authentication successful
+			var content = server.loadMyKids(code1);
+			var main = client.fillContents("startp");
+			main.trigger( "create" );
+			$("#startp_set_code_div").hide();
+			$("#add_mykid_page #add_city_form").show();
+			$("#startp_search").show(); // suche anzeigen
+		  }
+		});
+	},
+	
+	prepareMyKidPage: function() {
+	    var page ="add_mykid";
+	    var next = "school";
+	    client.preparePage(page, next,
+	    function(event) {
+		  // drilldown into school
+		  client.chosenCity = event.target.text;
+		  client.chosenKid = $("#add_mykid_name").val();
+	      client.saveEntity("mykid","city", client.chosenKid);
+	      client.saveEntity("city","school", event.target.text);
+	      $("#school_page div:jqmData(role=header) h1").text(client.chosenKid + "'s Schule");
+	      
+	    },
+		function(event) {
+		  // addItemCallback new city
+		  client.chosenKid = $("#add_mykid_name").val();
+	      client.saveEntity("mykid","city", client.chosenKid);
+	      $("#school_page div:jqmData(role=header) h1").text(client.chosenKid + "'s Schule");
+	      client.fill("add_mykid", "city"); //show all cities
+		  $("#add_mykid_page #add_city_form").hide();
+		  
+	    });
 	},
 	
 	confirmAndDelete: function(page, listitem, transition ) {

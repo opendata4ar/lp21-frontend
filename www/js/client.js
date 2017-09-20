@@ -278,7 +278,9 @@ var client = {
 		  // addItemCallback new city
 		  client.chosenKid = $("#add_mykid_name").val();
 	      client.saveEntity("mykid","city", client.chosenKid);
+	      
 	      $("#school_page div:jqmData(role=header) h1").text(client.chosenKid + "'s Schule");
+	      
 	      client.fill("add_mykid", "city"); //show all cities
 		  $("#add_mykid_page #add_city_form").hide();
 		  
