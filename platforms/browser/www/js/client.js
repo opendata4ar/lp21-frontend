@@ -114,7 +114,7 @@ var client = {
 		var content = server.load(page, client.getMyAccessCode());
 		var main = $("#" + page + "_page div:jqmData(role=content)");
 		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
-		if (!contentContainer) {
+		if (contentContainer == undefined || contentContainer.length == 0) {
 		  main.append(content);
 		} else {
 		  contentContainer.empty();
@@ -125,19 +125,17 @@ var client = {
 	
 	fill: function(page, entity) {
 		var content = server.load(entity, client.getMyAccessCode());
-		//fix data-input
-		
+		// fix data-input
+		content = content.replace("data-input='#choose_" + entity, "data-input='#choose_" + page);
 		var main = $("#" + page + "_page div:jqmData(role=content)");
 		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
+		alert(content);
 		if (contentContainer == undefined || contentContainer.length == 0) {
 		  main.append(content);
-		} else if (contentContainer.length == 1) {
+		} else {
 		  contentContainer.empty();
 		  contentContainer.append (content);
-		} else {
-			alert("multiple contentContainers<br/> " + contentContainer.html());
-			//FIXME: sometimes identical <ul> are nested into each other???
-		}
+		} 
 		return main;
 	},
 	
@@ -276,7 +274,7 @@ var client = {
 		  client.chosenKid = $("#add_mykid_name").val();
 	      client.saveEntity("mykid","city", client.chosenKid);
 	      $("#city_page div:jqmData(role=header) h1").text("Schulgemeinde von " + client.chosenKid);
-	      //client.fill("add_mykid", "city"); //show all cities FIXME: data-input is wrong 
+	      client.fill("add_mykid", "city"); //show all cities
 	    });
 	},
 	

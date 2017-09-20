@@ -51,8 +51,8 @@ var server = {
 	
 	
 	loadCities: function() {
-	  var city_list = "";
-      city_list += "<ul data-role=listview data-filter=true data-inset=true data-autodividers=true data-input=#choose_city>";
+	  var city_list = ""; //FIXME: add id to ul?
+      city_list += "<ul data-role=listview data-filter=true data-inset=true data-autodividers=true data-input='#choose_city'>";
       city_list +=   "<li><a href=#school_page>Bern</a></li>";
       city_list +=   "<li><a href=#school_page>Burgdorf<span class=ui-li-count> 6</span></a></li>";
       city_list +=   "<li><a href=#school_page>Jegenstorf</a></li>";
