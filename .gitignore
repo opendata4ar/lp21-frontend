@@ -31,3 +31,6 @@ platforms/browser/build/package.zip
 *.bin
 *.lock
 *.zip
+*.bin
+*.lock
+*.zip
