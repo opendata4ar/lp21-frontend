@@ -28,3 +28,6 @@ platforms/browser/build/package.zip
 platforms/browser/build/package.zip
 platforms/browser/build/package.zip
 *.bin
+*.bin
+*.lock
+*.zip
