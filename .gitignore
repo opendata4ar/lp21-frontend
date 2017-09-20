@@ -34,3 +34,5 @@ platforms/browser/build/package.zip
 *.bin
 *.lock
 *.zip
+www/snip.json
+*.zip
