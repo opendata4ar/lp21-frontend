@@ -233,6 +233,7 @@ var client = {
 			var main = client.fillContents("startp");
 			$("#startp_set_code_div").show();
 			$("#add_mykid_page #add_city_form").hide();
+			$("#startp_search").hide(); // leer = keine suche
 			main.trigger( "create" );
 		});
 		
@@ -240,43 +241,44 @@ var client = {
 		  // access code entered
 		  if (client.getMyAccessCode() != null) {
 		    $("#startp_set_code_div").hide();
-			  return;
-			}
-			var code1 = $("#startp_set_code").val();
-				
-			var email = server.getEmailOfAccessCode(code1);
-			if (email == "?") {
-			  alert("Sorry, try again. If you need help, contact us at opendata4ar@gmail.com");
-			  $("#startp_set_code").val("");
-			} else {
-			  client.setMe(email, code1); // authentication successful
-			  var content = server.loadMyKids(code1);
-			  var main = client.fillContents("startp");
-			  main.trigger( "create" );
-			  $("#startp_set_code_div").hide();
-			  $("#add_mykid_page #add_city_form").show();
-			}
+			$("#startp_search").show(); // suche anzeigen
+			return;
+		  }
+		  var code1 = $("#startp_set_code").val();	
+		  var email = server.getEmailOfAccessCode(code1);
+		  if (email == "?") {
+			alert("Sorry, try again. If you need help, contact us at opendata4ar@gmail.com");
+			$("#startp_set_code").val("");
+		  } else {
+			client.setMe(email, code1); // authentication successful
+			var content = server.loadMyKids(code1);
+			var main = client.fillContents("startp");
+			main.trigger( "create" );
+			$("#startp_set_code_div").hide();
+			$("#add_mykid_page #add_city_form").show();
+			$("#startp_search").show(); // suche anzeigen
+		  }
 		});
 	},
 	
 	prepareMyKidPage: function() {
 	    var page ="add_mykid";
-	    var next = "city";
+	    var next = "school";
 	    client.preparePage(page, next,
 	    function(event) {
-		  // drilldown into city
-	      client.saveEntity("city","school", event.target.text);
+		  // drilldown into school
 		  client.chosenCity = event.target.text;
 		  client.chosenKid = $("#add_mykid_name").val();
 	      client.saveEntity("mykid","city", client.chosenKid);
-	      $("#city_page div:jqmData(role=header) h1").text("Schulgemeinde von " + client.chosenKid);
+	      client.saveEntity("city","school", event.target.text);
+	      $("#school_page div:jqmData(role=header) h1").text(client.chosenKid + "'s Schule");
 	      
 	    },
 		function(event) {
 		  // addItemCallback new city
 		  client.chosenKid = $("#add_mykid_name").val();
 	      client.saveEntity("mykid","city", client.chosenKid);
-	      $("#city_page div:jqmData(role=header) h1").text("Schulgemeinde von " + client.chosenKid);
+	      $("#school_page div:jqmData(role=header) h1").text(client.chosenKid + "'s Schule");
 	      client.fill("add_mykid", "city"); //show all cities
 		  $("#add_mykid_page #add_city_form").hide();
 		  

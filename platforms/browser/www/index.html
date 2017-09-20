@@ -414,7 +414,7 @@ $( window ).on( "navigate", function( event, data ){
 			<a id="reset" href="#reset" data-icon="refresh" class="ui-btn-right">reset</a>
 		</div>
 		<div data-role="content">
-			<div member="ui-field-contain">
+			<div id="startp_search" member="ui-field-contain" style="display: none">
 				<form member="ui-filterable">
 					<input id="choose_startp" method="get" action="#URL#"
 						data-type="search" placeholder="Suche Schüler">
@@ -422,7 +422,7 @@ $( window ).on( "navigate", function( event, data ){
 			</div>
 			<ul id="choose_startp_list" data-role="listview" data-filter="true"
 				data-autodividers="true" data-inset="true"
-				data-input="#choose_startp" />
+				data-input="#choose_startp"/>
 
 
 		</div>
