@@ -22,3 +22,4 @@ platforms/browser/build/package.zip
 debug.log
 *.zip
 platforms/browser/build/package.zip
+*.zip

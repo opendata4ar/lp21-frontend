@@ -64,7 +64,7 @@ var client = {
 	
     loadFormAddEntityNoInput: function(entity, gotoPage, entityLabel) {
 	  var form = "";
-	  form += "<form id=add_" + entity + "_form method=post action=#URL#><div class=ui-field-contain>";
+	  form += "<form id=add_" + entity + "_form method=post action=#URL# style='display: '><div class=ui-field-contain>";
 	  form +=   "<table style=width:100%><tr><td>";
 	  form +=     "<label for=add_" + entity + "_button>" + entityLabel + " hinzufügen</label>";
 	  form +=   "</td><td align=right><a href=#" + gotoPage + "_page>";
@@ -150,7 +150,6 @@ var client = {
 		
 		var addForm = $("#" + page + "_page div:jqmData(role=content) #add_" + page + "_form");
 		addForm.remove();
-		
 		// TODO: refactor
 	    if (page == "startp") {
 		  var addForm = client.loadFormAddEntityNoInput("mykid", "add_mykid", "Schüler");
@@ -158,6 +157,9 @@ var client = {
 	      var addForm = client.loadFormAddEntityNoInput("home", "country", "class");
 	    } else if (page == "add_mykid") {
 			var addForm = client.loadFormAddEntityNoInput("city", "city", "Schulgemeinde");
+			if (client.getMyEmail() == undefined) {
+				addForm = addForm.replace("style='display: '", "style='display: none'"); // hide, all cities are shown anyway
+			}
 		} else if (page == "profile_detail") {
 		  var addForm = client.loadFormAddEntityKeyValue(page, next, "detail", "value");
 		} else if (page == "student" || page == "teacher" || page == "parent") {
@@ -167,7 +169,8 @@ var client = {
 		} else {
 		  var addForm = client.loadFormAddEntitySingleInput(page, next);
 		}
-	    main.append (addForm).trigger( "create" );
+	    
+	    main.append(addForm).trigger( "create" );
 	 
 	    // drill down
 	    if (next != null) {
@@ -216,18 +219,13 @@ var client = {
 	  var next = "add_mykid";
 	  client.preparePage(page, next,
 		function(event) {
-		    client.chosenClass = event.target.text;
-	        client.isAddingClass = false;
-			//TODO set title of subsequent pages (for next page, it has been set already in preparePage)
-			$("#teacher_page div:jqmData(role=header) h1").text("Teachers of " + client.chosenClass);
-	        $("#student_page div:jqmData(role=header) h1").text("Students of " + client.chosenClass);
-	        $("#parent_page div:jqmData(role=header) h1").text("Parents of " + client.chosenClass); 		
+			//TODO set title of subsequent pages (for next page, it has been set already in preparePage)		
 		  }, 
-		  function(event) {client.isAddingClass = true;}
+		  function(event) {}
 		);
 		
 		$( document ).on ("click","#reset", function(event) {
-		    // "reset" button (dev only)
+		    // "reset" button clicked (dev only)
 			alert("You loose all your data when clicking OK! Contact us at opendata4ar@gmail.com");
 			client.reset();
 		    $("#startp_set_code").val("");
@@ -236,7 +234,6 @@ var client = {
 			$("#add_mykid_page #add_city_form").hide();
 			main.trigger( "create" );
 		});
-		
 		
 		$( document ).on ("click","#startp_set_code_submit", function(event) {
 		  // access code entered
