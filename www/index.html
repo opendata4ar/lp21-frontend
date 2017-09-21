@@ -23,8 +23,9 @@ $( document ).ajaxError(function( event, request, settings, error ) {
   // global ajax error handling
   var httpStatusCode = request.getResponseHeader("status"); // It is worth noting that browsers report a status of 0 in case of XMLHttpRequest errors too. https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/status
   var clientMsg = "Got error " + error + "\n on " + settings.type + " " + settings.url + "\n from app " + event.currentTarget.URL + " \n " + request.status + " " + request.statusText + " (" + httpStatusCode + ")";
-  alert(clientMsg); //FIXME: remove, log 
-  $( "div div:jqmData(role=footer)" ).append( "<li><font color='red'>" + clientMsg + "</font></li>" );
+  alert(clientMsg); //FIXME: remove, log
+  console.log(clientMsg);
+  //$( "div div:jqmData(role=footer)" ).append( "<li><font color='red'>" + clientMsg + "</font></li>" );
 });
     
 	// Respond to back/forward navigation
@@ -796,7 +797,7 @@ $( window ).on( "navigate", function( event, data ){
 		<div id="add_mykid_name_form">
 		  <!-- form id="add_mykid_form" method="post" action="#" -->
 		    <label id="add_mykid_name_label" for="add_mykid_name"> Name </label>
-			<input id="add_mykid_name" type="text" placeholder="Schüler" style="color: white">
+			<input id="add_mykid_name" type="text" placeholder="Schüler">
 		</p>	
 		  <!--/form-->
 		</div>

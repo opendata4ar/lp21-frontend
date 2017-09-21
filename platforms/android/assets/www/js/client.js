@@ -142,6 +142,31 @@ var client = {
 		return main;
 	},
 	
+	applyCities: function( citiesAsJson ) {
+		var citiesRaw = JSON.stringify(citiesAsJson);
+      	alert( "... loaded cities: \n " + citiesRaw);
+      	// convert to <li> (here because is also required by local db)
+      	// from [{"id":2761,"label":"Aesch (BL)","kanton_id":13},{"id":2769,"label":"Münchenstein","kanton_id":13}]
+      	// to   <li><a href=#school_page>Burgdorf<span class=ui-li-count> 6</span></a></li>
+      	var citiesListView = "<ul id=choose_add_mykid_list data-role=listview data-filter=true data-inset=true data-autodividers=true data-input=#choose_add_mykid>";
+      	
+      	for (var i=0,  len=citiesAsJson.length; i < len; i++) {
+      		var cityName = citiesAsJson[i].label;
+      	  citiesListView += "<li data-filtertext=" + cityName + "><a href=#school_page/" + citiesAsJson[i].id + ">" + cityName + "</a></li>";
+      	}
+      	citiesListView += "</ul>";
+        alert("built "+ citiesListView);
+
+      	var main = $("#city_page div:jqmData(role=content)");
+  		var contentContainer = $("#add_mykid_page div:jqmData(role=content) #choose_add_mykid_list").parent();
+  		if (contentContainer == undefined || contentContainer.length == 0) {
+  		  main.append(citiesListView).trigger("create");
+  		} else {
+  		  contentContainer.empty(); // be careful not to delete search!
+  		  contentContainer.append (citiesListView).trigger("create");
+  		}
+    },
+      
 	
 	
 	preparePage: function(page, next, drilldownCallback, addItemCallback) {
@@ -278,7 +303,9 @@ var client = {
 		  // addItemCallback new city
 		  client.chosenKid = $("#add_mykid_name").val();
 	      client.saveEntity("mykid","city", client.chosenKid);
+	      
 	      $("#school_page div:jqmData(role=header) h1").text(client.chosenKid + "'s Schule");
+	      
 	      client.fill("add_mykid", "city"); //show all cities
 		  $("#add_mykid_page #add_city_form").hide();
 		  

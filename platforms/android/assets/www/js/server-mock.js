@@ -49,17 +49,12 @@ var server = {
       return country_list;
 	},
 	
-	
-	loadCities: function() {
-	  var city_list = ""; //FIXME: add id to ul?
-      city_list += "<ul data-role=listview data-filter=true data-inset=true data-autodividers=true data-input='#choose_city'>";
-      city_list +=   "<li><a href=#school_page>Bern</a></li>";
-      city_list +=   "<li><a href=#school_page>Burgdorf<span class=ui-li-count> 6</span></a></li>";
-      city_list +=   "<li><a href=#school_page>Jegenstorf</a></li>";
-      city_list +=   "<li><a href=#school_page>Uster</a></li>";
-      city_list +=   "<li><a href=#school_page>Dürnten</a></li>";
-      city_list += "</ul>";
-      return city_list;
+    loadCities: function() {
+    	// TODO: lookup in local db first (timestamped, expire after 30d)!
+
+		alert("loadCities: loading data..."); //FIXME: delete this ajax test
+	    $.get( "http://localhost:8081/lp21/city/0", "", client.applyCities);
+        return $("#city_page div:jqmData(role=content) #choose_city_list ul"); // too early? TODO:return null
 	},
 	
 	
@@ -188,12 +183,15 @@ var server = {
 		  var my_cities = ""; // FIXME: search for kids having parent with email as member
 		  var email = this.getEmailOfAccessCode(accessCode);
 		  if (email != "?") {
+			// get cities already in use
 			my_cities += "<ul id=choose_add_mykid_list data-role=listview data-filter=true data-inset=true data-input=#choose_add_mykid>";
 			my_cities +=   "<li data-filtertext='Burgdorf'><a href=#school_page>Burgdorf<span class=ui-li-count>2</span></a></li>";
 			my_cities += "</ul>"; //FIXME: keep this data local (or get earlier, e.g. loadMyClasses
 		  } else {
-			  var cities = server.loadCities();
-			  cities = cities.replace("#choose_city", "#choose_add_mykid");
+			  // get all cities
+			  var cities = server.loadCities(); //FIXME: use ajax and client.applyCities
+			  // cities = cities.replace("#choose_city", "#choose_add_mykid");
+			  cities
 			  return cities;
 		  }
 		  return my_cities;

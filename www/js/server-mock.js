@@ -51,9 +51,9 @@ var server = {
 	
     loadCities: function() {
     	// TODO: lookup in local db first (timestamped, expire after 30d)!
-
-		alert("loadCities: loading data..."); //FIXME: delete this ajax test
-	    $.get( "http://localhost:8081/lp21/city/0", "", client.applyCities);
+        const getAllCities = "http://localhost:8081/lp21/city/0";
+		console.log("loadCities: GET " + getAllCities + " ...");
+	    $.get( getAllCities, "", client.applyCities);
         return $("#city_page div:jqmData(role=content) #choose_city_list ul"); // too early? TODO:return null
 	},
 	
@@ -184,8 +184,8 @@ var server = {
 		  var email = this.getEmailOfAccessCode(accessCode);
 		  if (email != "?") {
 			// get cities already in use
-			my_cities += "<ul id=choose_add_mykid_list data-role=listview data-filter=true data-inset=true data-input=#choose_add_mykid>";
-			my_cities +=   "<li data-filtertext='Burgdorf'><a href=#school_page>Burgdorf<span class=ui-li-count>2</span></a></li>";
+			my_cities += "<ul id=choose_add_mykid_list data-role=listview data-filter=true data-inset=true data-input=#choose_add_mykid >";
+			my_cities +=   "<li class=ui-page-theme-a data-filtertext='Burgdorf'><a href=#school_page><img src=res/icon/kantone/kt1.png>Burgdorf<span class=ui-li-count>2</span></a></li>";
 			my_cities += "</ul>"; //FIXME: keep this data local (or get earlier, e.g. loadMyClasses
 		  } else {
 			  // get all cities

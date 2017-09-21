@@ -126,36 +126,25 @@ var client = {
 	
 	fill: function(page, entity) {
 		var content = server.load(entity, client.getMyAccessCode());
-		// fix data-input
-		// content = content.replace("data-input='#choose_" + entity + "'", "id='choose_add_mykid_list' data-autodividers='true' data-input='#choose_" + page + "' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'");
-		content = content.replace("data-input='#choose_" + entity + "'", "id='choose_add_mykid_list' data-input='#choose_" + page + "' ");
-		
 		var main = $("#" + page + "_page div:jqmData(role=content)");
-		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
-		if (contentContainer == undefined || contentContainer.length == 0) {
-		  main.append(content).trigger("create");
-		} else {
-		  contentContainer.empty();
-		  contentContainer.append (content).trigger("create");
-		}
 		$("#add_mykid_page #add_city_form").hide();
 		return main;
 	},
 	
 	applyCities: function( citiesAsJson ) {
 		var citiesRaw = JSON.stringify(citiesAsJson);
-      	alert( "... loaded cities: \n " + citiesRaw);
+      	console.log( "... loaded " + citiesAsJson.length + " cities");
+      	//console.debug(citiesRaw);
       	// convert to <li> (here because is also required by local db)
       	// from [{"id":2761,"label":"Aesch (BL)","kanton_id":13},{"id":2769,"label":"Münchenstein","kanton_id":13}]
       	// to   <li><a href=#school_page>Burgdorf<span class=ui-li-count> 6</span></a></li>
       	var citiesListView = "<ul id=choose_add_mykid_list data-role=listview data-filter=true data-inset=true data-autodividers=true data-input=#choose_add_mykid>";
       	
       	for (var i=0,  len=citiesAsJson.length; i < len; i++) {
-      		var cityName = citiesAsJson[i].label;
-      	  citiesListView += "<li data-filtertext=" + cityName + "><a href=#school_page/" + citiesAsJson[i].id + ">" + cityName + "</a></li>";
+      	  var cityName = citiesAsJson[i].label;
+      	  citiesListView += "<li data-filtertext=" + cityName + "><a href=#school_page><img src=res/icon/kantone/kt" + citiesAsJson[i].kanton_id + ".png>" + cityName + "</a></li>";
       	}
       	citiesListView += "</ul>";
-        alert("built "+ citiesListView);
 
       	var main = $("#city_page div:jqmData(role=content)");
   		var contentContainer = $("#add_mykid_page div:jqmData(role=content) #choose_add_mykid_list").parent();

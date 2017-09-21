@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
 		<script type="text/javascript" src="js/device.js"></script>
 		<script type="text/javascript" src="js/client.js"></script>
-		<script type="text/javascript" src="js/server.js"></script>
+		<script type="text/javascript" src="js/server-mock.js"></script> <!-- FIXME: remove server-mock.js -->
 		<script type="text/javascript" src="js/html5sql.js"></script>
 		<script type="text/javascript" src="js/db.js"></script>
 		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -19,7 +19,14 @@
 		
         <script>
 	
-	
+$( document ).ajaxError(function( event, request, settings, error ) {
+  // global ajax error handling
+  var httpStatusCode = request.getResponseHeader("status"); // It is worth noting that browsers report a status of 0 in case of XMLHttpRequest errors too. https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/status
+  var clientMsg = "Got error " + error + "\n on " + settings.type + " " + settings.url + "\n from app " + event.currentTarget.URL + " \n " + request.status + " " + request.statusText + " (" + httpStatusCode + ")";
+  alert(clientMsg); //FIXME: remove, log 
+  $( "div div:jqmData(role=footer)" ).append( "<li><font color='red'>" + clientMsg + "</font></li>" );
+});
+    
 	// Respond to back/forward navigation
 $( window ).on( "navigate", function( event, data ){
   if( data.state.foo ){
@@ -247,7 +254,26 @@ $( window ).on( "navigate", function( event, data ){
     
 	client.prepareMyKidPage();
 
-
+    $(document).on("pagecreate","#add_mykid_page",function(){
+      //register validation for name
+      $("#add_mykid_name").focus(function(){
+        $('#add_mykid_name').next(".red").remove();
+        $('#add_mykid_name').val("");
+      });
+      $("#add_mykid_name").blur(function(){
+        var name=$('#add_mykid_name').val();
+        if(name == undefined || name.replace(" ","").length < 1){
+          //$('#add_mykid_name').color("Bitte hier den Namen eingeben");
+          $('#add_mykid_name').after('<div class="red"><font color="red"> Bitte Name des Schülers eingeben</font></div>');
+          $("#add_mykid_page #choose_add_mykid_city").hide();
+        } else {
+          $('#add_mykid_name').next(".red").remove();
+          $("#add_mykid_page #choose_add_mykid_city").show();
+          return true;
+        }
+      });
+    });
+    
 	
 	
 	/* 
@@ -334,6 +360,7 @@ $( window ).on( "navigate", function( event, data ){
 	*/
 	client.preparePage("help", "help", function(event) {},  function(event) {});
 	
+	
 	/* 
 	-------------------------- 
 	--- home_page teacher  --- 
@@ -409,7 +436,7 @@ $( window ).on( "navigate", function( event, data ){
 	  -->
 	<div data-role="page" id="startp_page" class="ui-page-theme-b">
 		<div data-role="header">
-			<a href="#help_page" data-icon="bars" class="ui-btn-left" style="display: none">mehr</a>
+			<a id="help" href="#help_page" data-icon="bars" class="ui-btn-left" style="display: none">mehr</a>
 			<h1>Schule21</h1>
 			<a id="reset" href="#reset" data-icon="refresh" class="ui-btn-right">reset</a>
 		</div>
@@ -427,7 +454,7 @@ $( window ).on( "navigate", function( event, data ){
 
 		</div>
 
-		<div id="startp_set_code_div">
+		<div id="startp_set_code_div" style="display: none">
 			<!-- form id="startp_set_code_form" method="post" action="#" -->
 			<table width="100%">
 				<tr>
@@ -767,21 +794,21 @@ $( window ).on( "navigate", function( event, data ){
 		</div>
 		
 		<div id="add_mykid_name_form">
-		<p>
 		  <!-- form id="add_mykid_form" method="post" action="#" -->
-		    <label id="add_mykid_name_label" for="add_mykid_name">Name </label>
-			<input id="add_mykid_name" type="text" placeholder="z.B. Neo">
+		    <label id="add_mykid_name_label" for="add_mykid_name"> Name </label>
+			<input id="add_mykid_name" type="text" placeholder="Schüler" style="color: white">
 		</p>	
 		  <!--/form-->
 		</div>
 		
-		<div data-role="content">
+		<div id="choose_add_mykid_city" data-role="content" style="display: none">
 		  Schulgemeinde
 		  <div class="ui-field-contain">
 		    <form class="ui-filterable">
-		      <input id="choose_add_mykid" method="get" action="#URL#"data-type="search" placeholder="Ort">
-		      
-		      <ul id="choose_add_mykid_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_add_mykid"/>
+		      <input id="choose_add_mykid" method="get" action="#URL#" data-type="search" placeholder="Ort">
+		      <div id="choose_add_mykid_list_parent">
+		        <ul id="choose_add_mykid_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_add_mykid"/>
+		      </div>
 		    </form>
 		  </div>
 		</div>
