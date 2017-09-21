@@ -51,3 +51,4 @@ platforms/browser/www/snip.json
 *.lock
 platforms/android/assets/www/snip.json
 *.zip
+platforms/browser/build/package.zip
