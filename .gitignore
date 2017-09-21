@@ -49,3 +49,5 @@ platforms/browser/www/snip.json
 *.bin
 *.bin
 *.lock
+platforms/android/assets/www/snip.json
+*.zip
