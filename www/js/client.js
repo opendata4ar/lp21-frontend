@@ -147,7 +147,7 @@ var client = {
       	for (var i=0,  len=citiesAsJson.length; i < len; i++) {
       	  var cityName = citiesAsJson[i].label;
       	  var kt = kantone[citiesAsJson[i].kanton_id].toUpperCase();
-      	  citiesListView += "<li data-filtertext=" + cityName.replace(/\s/g, '') + "><a id=" + citiesAsJson[i].id + " href=#school_page><img src=./res/icon/kantone/" + kt + ".png  alt=" + kt + " class=ui-li-icon>" + cityName + "</a></li>";
+      	  citiesListView += "<li data-filtertext='" + cityName + "'><a id=" + citiesAsJson[i].id + " href=#school_page><img src=./res/icon/kantone/" + kt + ".png  alt=" + kt + " class=ui-li-icon>" + cityName + "</a></li>";
       	}
       	citiesListView += "</ul>";
 
@@ -213,7 +213,7 @@ var client = {
           var schoolId = schoolsAsJson[i].id;
           var kt = kantone[schoolsAsJson[i].kanton_id].toUpperCase();
           //var schoolNameShort = client.formatSchoolName(schoolName);
-          schoolListView += "<li data-filtertext=" + schoolName.replace(/\s/g, '') + ">";
+          schoolListView += "<li data-filtertext='" + schoolName + "'>";
           schoolListView += "<a id=" + schoolId + " href=#class_page><img src=./res/icon/kantone/" + kt + ".png alt=" + kt + " class=ui-li-icon>"
           schoolListView += schoolName + "</a></li>";
           prevSchoolName = schoolName;
