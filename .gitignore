@@ -47,3 +47,4 @@ platforms/browser/build/package.zip
 *.zip
 platforms/browser/www/snip.json
 *.bin
+*.bin
