@@ -136,9 +136,9 @@ var client = {
 	},
 	
 	applyCities: function( citiesAsJson ) {
-		var citiesRaw = JSON.stringify(citiesAsJson);
-      	console.log( "... loaded " + citiesAsJson.length + " cities");
-      	//console.debug(citiesRaw);
+		console.log( "... loaded " + citiesAsJson.length + " cities");
+		//var citiesRaw = JSON.stringify(citiesAsJson);
+        //console.debug(citiesRaw);
       	// convert to <li> (here because is also required by local db)
       	// from [{"id":2761,"label":"Aesch (BL)","kanton_id":13},{"id":2769,"label":"Münchenstein","kanton_id":13}]
       	// to   <li><a href=#school_page>Burgdorf<span class=ui-li-count> 6</span></a></li>
@@ -147,7 +147,7 @@ var client = {
       	for (var i=0,  len=citiesAsJson.length; i < len; i++) {
       	  var cityName = citiesAsJson[i].label;
       	  var kt = kantone[citiesAsJson[i].kanton_id].toUpperCase();
-      	  citiesListView += "<li data-filtertext=" + cityName + "><a id=" + citiesAsJson[i].id + " href=#school_page><img src=./res/icon/kantone/" + kt + ".png  alt=" + kt + " class=ui-li-icon>" + cityName + "</a></li>";
+      	  citiesListView += "<li data-filtertext=" + cityName.replace(/\s/g, '') + "><a id=" + citiesAsJson[i].id + " href=#school_page><img src=./res/icon/kantone/" + kt + ".png  alt=" + kt + " class=ui-li-icon>" + cityName + "</a></li>";
       	}
       	citiesListView += "</ul>";
 
@@ -163,12 +163,85 @@ var client = {
         client.loadingCities = false;
         $('#add_mykid_name').next(".lade").remove();
     },
+    
+    formatSchoolName: function (schoolName) {
+      //TODO: delete me, not in use
+      shorthand = schoolName.replace("Schulhaus ","");
+      shorthand = shorthand.replace("Volksschule ","");
+      shorthand = shorthand.replace("Schulzentrum ","");
+      shorthand = shorthand.replace("Schulhäuser ","");
       
+      if (shorthand.startsWith("Kindergarten ")) {
+        shorthand = shorthand.substring(13) + " (Kindergarten)";
+      }
+      if (shorthand.startsWith("Primarschule ")) {
+        shorthand = shorthand.substring(13) + " (Primar)";
+      }
+      if (shorthand.startsWith("Sekundarschule ")) {
+        shorthand = shorthand.substring(15) + " (Sek.)";
+      }
+      if (shorthand.startsWith("Sekundarstufe ")) {
+        shorthand = shorthand.substring(14) + " (Sek.)";        
+      }
+      if (shorthand.startsWith("Oberstufenschule ")) {
+        shorthand = shorthand.substring(17) + " (Oberstufe)";                
+      }
+      if (shorthand.startsWith("Oberstufenzentrum ")) {
+        shorthand = shorthand.substring(18) + " (Oberstufe)";                        
+      }
+      if (shorthand.startsWith("Schule ")) {
+        shorthand = shorthand.substring(7);
+      }
+      return shorthand;
+    },
+      
+    applySchools: function( schoolsAsJson ) {
+      var end = Date.now();
+      console.log(new Date().toISOString() + "... loaded " + schoolsAsJson.length + " schools in " + (end - client.loadingSchools) + " ms");
+      //var schoolsRaw = JSON.stringify(schoolsAsJson);
+      //console.debug(schoolsRaw);
+      // convert to <li> (here because is also required by local db)
+      // from [{"id":5475,"label":"Schule Heiligenschwendi","kind":"Total Schule","city_id":927,"kanton_id":2,"validTo":null},{"id":5476,"label":"Schule Heiligenschwendi","kind":"Vorschulstufe","city_id":927,"kanton_id":2,"validTo":null},{"id":5477,"label":"Schule Heiligenschwendi","kind":"Primarstufe","city_id":927,"kanton_id":2,"validTo":null}]
+      // to   <li><a href=#class_page>Primarschule Dorf<span class=ui-li-count> 2</span></a></li>
+   
+      var schoolListView = "<ul id=choose_school_list data-role=listview data-filter=true data-inset=true data-autodividers=true data-input=#choose_school>";
+      var prevSchoolName = "";
+      for (var i=0,  len=schoolsAsJson.length; i < len; i++) {
+        var schoolName = schoolsAsJson[i].label;
+        if (prevSchoolName != schoolName) {
+          // hide "duplicates"
+          var schoolId = schoolsAsJson[i].id;
+          var kt = kantone[schoolsAsJson[i].kanton_id].toUpperCase();
+          //var schoolNameShort = client.formatSchoolName(schoolName);
+          schoolListView += "<li data-filtertext=" + schoolName.replace(/\s/g, '') + ">";
+          schoolListView += "<a id=" + schoolId + " href=#class_page><img src=./res/icon/kantone/" + kt + ".png alt=" + kt + " class=ui-li-icon>"
+          schoolListView += schoolName + "</a></li>";
+          prevSchoolName = schoolName;
+        }
+      }
+      schoolListView += "</ul>";
+
+      var main = $("#school_page div:jqmData(role=content)");
+      var contentContainer = $("#school_page div:jqmData(role=content) #choose_school_list").parent();
+      //??? $("#add_mykid_page #choose_add_mykid_city").show();
+      if (contentContainer == undefined || contentContainer.length == 0) {
+        main.append(schoolListView).trigger("create");
+      } else {
+        contentContainer.empty(); // be careful not to delete search!
+        contentContainer.append (schoolListView).trigger("create");
+      }
+      client.loadingSchools = false;
+      //??? $('#add_mykid_name').next(".lade").remove();
+  },
+    
 	
 	
 	preparePage: function(page, next, drilldownCallback, addItemCallback) {
 	  $( document ).on( "pagecreate", "#" + page + "_page", function() {
-		
+	    
+	    if (page == "school") {
+          client.loadingSchools = Date.now(); //FIXME move elsewhere
+	    }
 		var main = client.fillContents(page);
 		
 		var addForm = $("#" + page + "_page div:jqmData(role=content) #add_" + page + "_form");

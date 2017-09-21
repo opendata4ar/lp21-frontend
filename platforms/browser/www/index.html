@@ -89,11 +89,13 @@ $( window ).on( "navigate", function( event, data ){
 	client.preparePage("school", "class", function(event) {
 	      client.saveEntity("school","class",event.target.text);
 		  client.chosenSchool = event.target.text;
+		  client.chosenSchoolId = event.target.id;
 	    },
 		function(event) {
 		  var added = $("#school_page div:jqmData(role=content) form table input").val();
 	      client.addEntity("school","class",added);
 		  client.chosenSchool = added;
+		  client.chosenSchoolId = event.target.id;
 	    }
 	);
 	
@@ -575,11 +577,11 @@ $( window ).on( "navigate", function( event, data ){
 			<div class="ui-field-contain">
 				<form class="ui-filterable">
 					<input id="choose_city" method="get" action="#URL#"
-						data-type="search" placeholder="We live in ...">
+						data-type="search" placeholder="We live in ..." />
 				</form>
 			</div>
 			<ul id="choose_city_list" data-role="listview" data-filter="true"
-				data-inset="true" data-autodividers="true" data-input="#choose_city">
+				data-inset="true" data-autodividers="true" data-input="#choose_city" />
 		</div>
 		<div data-role="footer"></div>
 	</div>
@@ -590,7 +592,7 @@ $( window ).on( "navigate", function( event, data ){
 	  *** school_page *** 
 	  ************************** 
 	  -->
-	<div data-role="page" id="school_page">
+	<div data-role="page" id="school_page" class="ui-page-theme-b">
 		<div data-role="header" data-add-back-btn="true">
 			<h1>Schools</h1>
 		</div>
@@ -598,12 +600,14 @@ $( window ).on( "navigate", function( event, data ){
 			<div class="ui-field-contain">
 				<form class="ui-filterable">
 					<input id="choose_school" method="get" action="#URL#"
-						data-type="search" placeholder="Our school ...">
+						data-type="search" placeholder="Our school ..." />
 				</form>
 			</div>
-			<ul id="choose_school_list" data-role="listview" data-filter="true"
+			<div id="choose_school_list_parent">
+			  <ul id="choose_school_list" data-role="listview" data-filter="true"
 				data-inset="true" data-autodividers="true"
-				data-input="#choose_school">
+				data-input="#choose_school" />
+			</div>
 		</div>
 		<div data-role="footer"></div>
 	</div>
