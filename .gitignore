@@ -53,3 +53,4 @@ platforms/android/assets/www/snip.json
 *.zip
 platforms/browser/build/package.zip
 platforms/browser/build/package.zip
+platforms/browser/build/package.zip
