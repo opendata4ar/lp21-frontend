@@ -67,7 +67,7 @@ $( window ).on( "navigate", function( event, data ){
 	--- city_page --- 
 	--------------------------- 
 	*/
-	  
+	//TODO: delete page, is inlined into add_mykid_page
 	client.preparePage("city", "school", function(event) {
 	      client.saveEntity("city","school",event.target.text);
 		  client.chosenCity = event.target.text;
@@ -256,6 +256,7 @@ $( window ).on( "navigate", function( event, data ){
 	client.prepareMyKidPage();
 
     $(document).on("pagecreate","#add_mykid_page",function(){
+    
       //register validation for name
       $("#add_mykid_name").focus(function(){
         $('#add_mykid_name').next(".red").remove();
@@ -269,11 +270,17 @@ $( window ).on( "navigate", function( event, data ){
           $("#add_mykid_page #choose_add_mykid_city").hide();
         } else {
           $('#add_mykid_name').next(".red").remove();
-          $("#add_mykid_page #choose_add_mykid_city").show();
+          if (!client.loadingCities) {
+            $('#add_mykid_name').next(".lade").remove();
+            $("#add_mykid_page #choose_add_mykid_city").show();
+          } else {
+            $('#add_mykid_name').after('<div class="lade"><font color="lightblue">lade Orte ...</font></div>');
+          }
           return true;
         }
       });
     });
+    
     
 	
 	

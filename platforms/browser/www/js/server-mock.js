@@ -2,21 +2,22 @@
     to-be server side logic delivering DOM fragments, usually <ul>.
 	Copyright by opendata4ar
  */
+const backend = "http://localhost:8081/lp21/";
 var server = {
 
-    load: function(entity, accessCode) {
+    load: function(entity, param) {
 	  if (entity == "startp") {
-	    return this.loadMyKids(accessCode);
+	    return this.loadMyKids(param);
 	  } else if (entity == "home") {
-		return this.loadMyClasses(accessCode);
+		return this.loadMyClasses(param);
 	  } else if (entity == "country") {
 	    return this.loadCountries();
 	  } else if (entity == "city") {
 	    return this.loadCities();
 	  } else if (entity == "add_mykid") {
-		return this.loadMyCities(accessCode);
+		return this.loadMyCities(param);
 	  } else if (entity == "school") {
-	    return this.loadSchools();
+	    return this.loadSchools(param);
 	  } else if (entity == "class") {
 	    return this.loadClasses();
 	  } else if (entity == "member") {
@@ -50,22 +51,28 @@ var server = {
 	},
 	
     loadCities: function() {
+        client.loadingCities = true;
     	// TODO: lookup in local db first (timestamped, expire after 30d)!
-        const getAllCities = "http://localhost:8081/lp21/city/0";
+        const getAllCities = backend + "city/0";
 		console.log("loadCities: GET " + getAllCities + " ...");
 	    $.get( getAllCities, "", client.applyCities);
         return $("#city_page div:jqmData(role=content) #choose_city_list ul"); // too early? TODO:return null
 	},
 	
 	
-	loadSchools: function() {
-	  var school_list = "";
+	loadSchools: function(city_id) {
+      const getSchoolsByCity = backend + "school/" + city_id;
+      console.log("loadSchools: GET " + getSchoolsByCity + " ...");
+      $.get( getSchoolsByCity, "", client.applySchools);
+      return $("#school_page div:jqmData(role=content) #choose_school_list ul");
+      /*
+      var school_list = "";
       school_list += "<ul data-role=listview data-filter=true data-inset=true data-autodividers=true data-input=#choose_school>";
       school_list +=   "<li><a href=#class_page>Primarschule Breiti</a></li>";
       school_list +=   "<li><a href=#class_page>Primarschule Dorf<span class=ui-li-count> 2</span></a></li>";
       school_list +=   "<li><a href=#class_page>Kanti</a></li>";
       school_list += "</ul>";
-      return school_list;
+      return school_list;*/
 	},
 	
 	
@@ -185,7 +192,7 @@ var server = {
 		  if (email != "?") {
 			// get cities already in use
 			my_cities += "<ul id=choose_add_mykid_list data-role=listview data-filter=true data-inset=true data-input=#choose_add_mykid >";
-			my_cities +=   "<li class=ui-page-theme-a data-filtertext='Burgdorf'><a href=#school_page><img src=res/icon/kantone/kt1.png>Burgdorf<span class=ui-li-count>2</span></a></li>";
+			my_cities +=   "<li class=ui-page-theme-a data-filtertext='Burgdorf'><a id=mock href=#school_page><img src=res/icon/kantone/ZH.png>Burgdorf<span class=ui-li-count>2</span></a></li>";
 			my_cities += "</ul>"; //FIXME: keep this data local (or get earlier, e.g. loadMyClasses
 		  } else {
 			  // get all cities
@@ -204,8 +211,8 @@ var server = {
 	  var email = this.getEmailOfAccessCode(accessCode);
 	  if (email != "?") {
 		my_kids += "<ul id=choose_startp_list data-role=listview data-filter=true data-autodividers=true data-inset=true data-input=#choose_startp>";
-		my_kids +=   "<li data-filtertext='Alex'><a href=#mykid_page>Alex<span class=ui-li-count>3</span></a></li>";
-		my_kids +=   "<li data-filtertext='Remo'><a href=#mykid_page>Remo<span class=ui-li-count>1</span></a></li>";
+		my_kids +=   "<li data-filtertext='Alex'><a href=#mykid_page><img src=res/icon/student.gif>Alex<span class=ui-li-count>3</span></a></li>";
+		my_kids +=   "<li data-filtertext='Remo'><a href=#mykid_page><img src=res/icon/girl.png>Remo<span class=ui-li-count>1</span></a></li>";
 		my_kids += "</ul>"; //FIXME: define #mykid_page
 	  }
 	  return my_kids;

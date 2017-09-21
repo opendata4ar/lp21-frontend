@@ -2,7 +2,8 @@
     device independent client side logic.
     Copyright by opendata4ar
  */
- 
+const kantone = new Array('?','zh','be','lu','ur','sz','ow','nw','gl','zg','fr','so','bs','bl','sh','ar','ai','sg','gr','ag','tg','ti','vd','vs','ne','ge','ju'); 
+
 var client = {
  
     saveEntity: function(entity,next,selected) {
@@ -111,8 +112,11 @@ var client = {
 	},
 	
 	fillContents: function(page) {
-	    // clean and re-populate the list (TODO: connect again?)
-		var content = server.load(page, client.getMyAccessCode());
+      if (page == "school") {
+	    var content = server.load(page, client.chosenCityId);
+      } else {
+        var content = server.load(page, client.getMyAccessCode());
+      }
 		var main = $("#" + page + "_page div:jqmData(role=content)");
 		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
 		if (contentContainer == undefined || contentContainer.length == 0) {
@@ -142,18 +146,22 @@ var client = {
       	
       	for (var i=0,  len=citiesAsJson.length; i < len; i++) {
       	  var cityName = citiesAsJson[i].label;
-      	  citiesListView += "<li data-filtertext=" + cityName + "><a href=#school_page><img src=res/icon/kantone/kt" + citiesAsJson[i].kanton_id + ".png>" + cityName + "</a></li>";
+      	  var kt = kantone[citiesAsJson[i].kanton_id].toUpperCase();
+      	  citiesListView += "<li data-filtertext=" + cityName + "><a id=" + citiesAsJson[i].id + " href=#school_page><img src=./res/icon/kantone/" + kt + ".png  alt=" + kt + " class=ui-li-icon>" + cityName + "</a></li>";
       	}
       	citiesListView += "</ul>";
 
       	var main = $("#city_page div:jqmData(role=content)");
   		var contentContainer = $("#add_mykid_page div:jqmData(role=content) #choose_add_mykid_list").parent();
+        $("#add_mykid_page #choose_add_mykid_city").show();
   		if (contentContainer == undefined || contentContainer.length == 0) {
   		  main.append(citiesListView).trigger("create");
   		} else {
   		  contentContainer.empty(); // be careful not to delete search!
   		  contentContainer.append (citiesListView).trigger("create");
   		}
+        client.loadingCities = false;
+        $('#add_mykid_name').next(".lade").remove();
     },
       
 	
@@ -278,10 +286,14 @@ var client = {
 	prepareMyKidPage: function() {
 	    var page ="add_mykid";
 	    var next = "school";
+        client.loadingCities = false;
 	    client.preparePage(page, next,
 	    function(event) {
 		  // drilldown into school
+
+	      // remember kid's name and city chosen
 		  client.chosenCity = event.target.text;
+          client.chosenCityId = event.target.id;
 		  client.chosenKid = $("#add_mykid_name").val();
 	      client.saveEntity("mykid","city", client.chosenKid);
 	      client.saveEntity("city","school", event.target.text);
@@ -289,15 +301,10 @@ var client = {
 	      
 	    },
 		function(event) {
-		  // addItemCallback new city
-		  client.chosenKid = $("#add_mykid_name").val();
-	      client.saveEntity("mykid","city", client.chosenKid);
-	      
-	      $("#school_page div:jqmData(role=header) h1").text(client.chosenKid + "'s Schule");
-	      
+		  // addItemCallback show all cities
+	      client.loadingCities = true;
 	      client.fill("add_mykid", "city"); //show all cities
-		  $("#add_mykid_page #add_city_form").hide();
-		  
+		  $("#add_mykid_page #add_city_form").hide();		  
 	    });
 	},
 	
