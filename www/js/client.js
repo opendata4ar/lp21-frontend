@@ -70,7 +70,11 @@ var client = {
     var form = ""; // add_mykid_page => add_city form
     form += "<form id=add_" + entity + "_form method=post action=#URL# style='display: '><div class=ui-field-contain>";
     form += "<table style=width:100%><tr><td>";
-    form += "<label for=add_" + entity + "_button>" + entityLabel + " hinzufügen</label>";
+    if (entity == "city") {
+      form += "<label for=add_" + entity + "_button>Alle " + entityLabel + "n anzeigen</label>";
+    } else {
+      form += "<label for=add_" + entity + "_button>" + entityLabel + " hinzufügen</label>";
+    }
     form += "</td><td align=right><a href=#" + gotoPage + "_page>";
     form += "<input id=add_" + entity + "_button type=submit data-icon=plus data-iconpos=notext value=Submit/>"
     form += "</a></td></table></div></form>";
@@ -193,6 +197,11 @@ var client = {
       }
       // add
       $(".ui-icon-plus").click(function(event) {
+        $("#" + next + "_page div:jqmData(role=header) h1").ignore("span").text(event.target.text);
+        addItemCallback(event);
+      });
+      // save
+      $(".ui-icon-check").click(function(event) {
         $("#" + next + "_page div:jqmData(role=header) h1").ignore("span").text(event.target.text);
         addItemCallback(event);
       });

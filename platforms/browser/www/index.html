@@ -50,7 +50,7 @@ $(window).on("navigate", function(event, data) {
       client.loadingCities = false;
     }
   }
-// reset state
+  // reset state
 });
 
 /**
@@ -104,18 +104,7 @@ client.preparePage("city", "school", function(event) {
 -------------------------- 
 */
 
-client.preparePage("school", "class", function(event) {
-  client.saveEntity("school", "class", event.target.text);
-  client.chosenSchool = event.target.text;
-  client.chosenSchoolId = event.target.id;
-},
-  function(event) {
-    var added = $("#school_page div:jqmData(role=content) form table input").val();
-    client.addEntity("school", "class", added);
-    client.chosenSchool = added;
-    client.chosenSchoolId = event.target.id;
-  }
-);
+schoolPage.preparePage();
 
 /* 
 -------------------------- 
@@ -627,9 +616,56 @@ gap.initialize();
   <div data-role="page" id="school_page" class="ui-page-theme-b">
     <div data-role="header" data-add-back-btn="true">
       <h1>Schools</h1>
+      <a id="add_school_btn" href="#add_school" data-icon="plus" class="ui-btn-right">Schule</a>
+      <a id="save_school_btn" href="#save_school" data-icon="check" class="ui-btn-right" style="display: none">OK</a>
     </div>
     <div data-role="content">
-      <div class="ui-field-contain">
+            <div id="add_school_div" style="display: none">
+        <!-- Formular, um Schule hinzuzufügen -->
+        <table>
+        <tr>
+          <td><label id="add_school_name_label"
+            for="add_school_name">Schule</label></td>
+          <td><input id="add_school_name" type="text"></td>
+        </tr>
+        <tr>
+          <td><label id="add_school_street_label" for="add_school_street">Adresse</label></td>
+          <td><input id="add_school_name" type="text"></td>
+
+        <tr>
+          <td></td>
+          <td>
+            <fieldset id="add_school_zyklus" data-role="controlgroup" data-type="horizontal">
+              <legend>Schulstufen (Lehrplan 21)</legend>
+              <input type="checkbox" name="zyklus1" id="zyklus1">
+              <label for="zyklus1">1. Zyklus</label>
+              <input type="checkbox" name="zyklus2" id="zyklus2">
+              <label for="zyklus2">2. Zyklus</label>
+              <input type="checkbox" name="zyklus3" id="zyklus3">
+              <label for="zyklus3">3. Zyklus</label>
+            </fieldset>    
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <fieldset id="add_school_stage3" data-role="controlgroup" data-type="horizontal">
+              <legend>Schulstufen</legend>
+              <input type="checkbox" name="kg" id="kg">
+              <label for="kg">Kindergarten / Vorschule</label>
+              <input type="checkbox" name="prim" id="prim">
+              <label for="prim">Primarschule / Unterstufe</label>
+              <input type="checkbox" name="sek" id="sek">
+              <label for="sek">Sekundarschule / Oberstufe</label>
+            </fieldset>    
+        </tr>
+        <tr>
+          <td><input id="add_school_submit" type="submit" data-icon="check" data-iconpos="notext" value="Submit"></td>
+        </tr>
+        </table>
+        <!--/form-->
+      </div>
+      
+      <div id="choose_school_search" class="ui-field-contain">
         <form class="ui-filterable" method="get" action="#URL#">
           <input id="choose_school" data-type="search"
             placeholder="Our school ..." />
@@ -641,6 +677,7 @@ gap.initialize();
           data-input="#choose_school">
         </ul>
       </div>
+      
     </div>
     <div data-role="footer"></div>
   </div>

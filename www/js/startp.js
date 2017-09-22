@@ -30,8 +30,8 @@ var startp = {
 
   
   prepareHomePageParents : function() {
-    var page = "startp";
-    var next = "add_mykid";
+    var page = this.name();
+    var next = this.nextPage();
     client.preparePage(page, next,
       function(event) {
         //TODO set title of subsequent pages (for next page, it has been set already in preparePage)    

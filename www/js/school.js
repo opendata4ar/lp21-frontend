@@ -24,6 +24,41 @@ var schoolPage = {
     $("#" + this.nextPage() + "_btn");
   },
   
+  preparePage: function() {
+    client.preparePage("school", "class", function(event) {
+      client.saveEntity("school", "class", event.target.text);
+      client.chosenSchool = event.target.text;
+      client.chosenSchoolId = event.target.id;
+    },
+      function(event) {
+        var added = $("#school_page div:jqmData(role=content) form table input").val();
+        client.addEntity("school", "class", added);
+        client.chosenSchool = added;
+        client.chosenSchoolId = event.target.id;
+      }
+    );
+    
+    $(document).on("click", "#add_school_btn", function(event) {
+      // "add school" button clicked
+      var searched = $("#" + schoolPage.name() + "_page #choose_school").val();
+      console.log("add school, search=" + searched);
+      $("#add_school_name").val(searched);
+      
+      $("#add_school_div").show();
+      $("#save_school_btn").show();
+      $("#add_school_btn").hide();
+      $("#choose_school_search").hide();
+      $("#add_school_form").hide();
+      $("#add_school_div").trigger("create");
+    });
+    
+    $(document).on("click", "#save_school_btn", function(event) {
+      var name = $("#add_school_name").val();
+      console.log("save school=" + name);        
+    });
+  },
+  
+  
   formatSchoolName : function(schoolName) {
     //TODO: delete me, not in use
     var shorthand = schoolName.replace("Schulhaus ", "");
