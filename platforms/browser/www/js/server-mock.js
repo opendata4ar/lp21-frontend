@@ -211,8 +211,8 @@ var server = {
 	  var email = this.getEmailOfAccessCode(accessCode);
 	  if (email != "?") {
 		my_kids += "<ul id=choose_startp_list data-role=listview data-filter=true data-autodividers=true data-inset=true data-input=#choose_startp>";
-		my_kids +=   "<li data-filtertext='Alex'><a href=#mykid_page><img src=res/icon/student.gif>Alex<span class=ui-li-count>3</span></a></li>";
-		my_kids +=   "<li data-filtertext='Remo'><a href=#mykid_page><img src=res/icon/girl.png>Remo<span class=ui-li-count>1</span></a></li>";
+		my_kids +=   "<li data-filtertext='Alex'><a id=mock href=#mykid_page><img src=res/icon/student.gif>Alex<span class=ui-li-count>3</span></a></li>";
+		my_kids +=   "<li data-filtertext='Remo'><a id=mock href=#mykid_page><img src=res/icon/student.gif>Remo<span class=ui-li-count>1</span></a></li>";
 		my_kids += "</ul>"; //FIXME: define #mykid_page
 	  }
 	  return my_kids;

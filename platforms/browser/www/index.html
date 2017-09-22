@@ -466,10 +466,9 @@ $(document).on('pageshow', 'div:jqmData(role="page")', function(event){
 			<a id="reset" href="#reset" data-icon="refresh" class="ui-btn-right">reset</a>
 		</div>
 		<div data-role="content">
-			<div id="startp_search" member="ui-field-contain" style="display: none">
-				<form member="ui-filterable">
-					<input id="choose_startp" method="get" action="#URL#"
-						data-type="search" placeholder="Suche Schüler">
+			<div id="startp_search" class="ui-field-contain" style="display: none">
+				<form class="ui-filterable" method="get" action="#URL#">
+					<input id="choose_startp" data-type="search" placeholder="Suche Schüler">
 				</form>
 			</div>
 			<ul id="choose_startp_list" data-role="listview" data-filter="true"

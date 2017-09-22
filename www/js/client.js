@@ -153,7 +153,10 @@ var client = {
 
       	var main = $("#city_page div:jqmData(role=content)");
   		var contentContainer = $("#add_mykid_page div:jqmData(role=content) #choose_add_mykid_list").parent();
-        $("#add_mykid_page #choose_add_mykid_city").show();
+  		var name=$('#add_mykid_name').val();
+      if(name != undefined && name.replace(" ","").length > 0){
+  		  $("#add_mykid_page #choose_add_mykid_city").show();
+      }
   		if (contentContainer == undefined || contentContainer.length == 0) {
   		  main.append(citiesListView).trigger("create");
   		} else {
@@ -244,7 +247,14 @@ var client = {
 	    }
 		var main = client.fillContents(page);
 		
-		var addForm = $("#" + page + "_page div:jqmData(role=content) #add_" + page + "_form");
+		var addForm = $("#" + page + "_page div:jqmData(role=content) #add_" + next + "_form");
+		if (page == "startp") {
+		  var addForm = $("#" + page + "_page div:jqmData(role=content) #" + next + "_form");	
+		} else if (page == "add_mykid") {
+		  var addForm = $("#" + page + "_page div:jqmData(role=content) #add_" + "city" + "_form");				
+		} else if (page == "school") {
+		  var addForm = $("#" + page + "_page div:jqmData(role=content) #add_" + "school" + "_form");				
+		}
 		addForm.remove();
 		// TODO: refactor
 	    if (page == "startp") {
