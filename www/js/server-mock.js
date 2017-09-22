@@ -54,7 +54,7 @@ var server = {
     // TODO: lookup in local db first (timestamped, expire after 30d)!
     const getAllCities = backend + "city/0";
     console.log("loadCities: GET " + getAllCities + " ...");
-    $.get(getAllCities, "", client.applyCities);
+    $.get(getAllCities, "", addMyKid.applyCities);
     return $("#city_page div:jqmData(role=content) #choose_city_list ul"); // too early? TODO:return null
   },
 
@@ -62,16 +62,8 @@ var server = {
   loadSchools : function(city_id) {
     const getSchoolsByCity = backend + "school/" + city_id;
     console.log("loadSchools: GET " + getSchoolsByCity + " ...");
-    $.get(getSchoolsByCity, "", client.applySchools);
+    $.get(getSchoolsByCity, "", schoolPage.applySchools);
     return $("#school_page div:jqmData(role=content) #choose_school_list ul");
-  /*
-  var school_list = "";
-  school_list += "<ul data-role=listview data-filter=true data-inset=true data-autodividers=true data-input=#choose_school>";
-  school_list +=   "<li><a href=#class_page>Primarschule Breiti</a></li>";
-  school_list +=   "<li><a href=#class_page>Primarschule Dorf<span class=ui-li-count> 2</span></a></li>";
-  school_list +=   "<li><a href=#class_page>Kanti</a></li>";
-  school_list += "</ul>";
-  return school_list;*/
   },
 
 
