@@ -620,7 +620,8 @@ gap.initialize();
       <a id="save_school_btn" href="#save_school" data-icon="check" class="ui-btn-right" style="display: none">OK</a>
     </div>
     <div data-role="content">
-            <div id="add_school_div" style="display: none">
+      <div id="add_school_div" style="display: none">
+        <!-- form id="add_school_form"  method="post" action="#class_page" -->
         <!-- Formular, um Schule hinzuzufügen -->
         <table>
         <tr>
@@ -630,7 +631,7 @@ gap.initialize();
         </tr>
         <tr>
           <td><label id="add_school_street_label" for="add_school_street">Adresse</label></td>
-          <td><input id="add_school_name" type="text"></td>
+          <td><input id="add_school_street" type="text"></td>
 
         <tr>
           <td></td>
@@ -648,7 +649,7 @@ gap.initialize();
         <tr>
           <td></td>
           <td>
-            <fieldset id="add_school_stage3" data-role="controlgroup" data-type="horizontal">
+            <fieldset id="add_school_stage" data-role="controlgroup" data-type="horizontal">
               <legend>Schulstufen</legend>
               <input type="checkbox" name="kg" id="kg">
               <label for="kg">Kindergarten / Vorschule</label>
@@ -662,7 +663,7 @@ gap.initialize();
           <td><input id="add_school_submit" type="submit" data-icon="check" data-iconpos="notext" value="Submit"></td>
         </tr>
         </table>
-        <!--/form-->
+        <!-- /form -->
       </div>
       
       <div id="choose_school_search" class="ui-field-contain">
