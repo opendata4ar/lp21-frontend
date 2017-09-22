@@ -454,545 +454,591 @@ $(document).on('pageshow', 'div:jqmData(role="page")', function(event){
 </head>
 <body>
 
-	<!-- 
-	  **************************  
-	  *** home_page parents  *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="startp_page" class="ui-page-theme-b">
-		<div data-role="header">
-			<a id="help" href="#help_page" data-icon="bars" class="ui-btn-left" style="display: none">mehr</a>
-			<h1>Schule21</h1>
-			<a id="reset" href="#reset" data-icon="refresh" class="ui-btn-right">reset</a>
-		</div>
-		<div data-role="content">
-			<div id="startp_search" class="ui-field-contain" style="display: none">
-				<form class="ui-filterable" method="get" action="#URL#">
-					<input id="choose_startp" data-type="search" placeholder="Suche Schüler">
-				</form>
-			</div>
-			<ul id="choose_startp_list" data-role="listview" data-filter="true"
-				data-autodividers="true" data-inset="true"
-				data-input="#choose_startp"/>
+  <!-- 
+      **************************  
+      *** home_page parents  *** 
+      ************************** 
+      -->
+  <div data-role="page" id="startp_page" class="ui-page-theme-b">
+    <div data-role="header">
+      <a id="help" href="#help_page" data-icon="bars"
+        class="ui-btn-left" style="display: none">mehr</a>
+      <h1>Schule21</h1>
+      <a id="reset" href="#reset" data-icon="refresh"
+        class="ui-btn-right">reset</a>
+    </div>
+    <div data-role="content">
+      <div id="startp_search" class="ui-field-contain"
+        style="display: none">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_startp" data-type="search"
+            placeholder="Suche Schüler">
+        </form>
+      </div>
+      <ul id="choose_startp_list" data-role="listview"
+        data-filter="true" data-autodividers="true" data-inset="true"
+        data-input="#choose_startp">
+      </ul>
+
+    </div>
+
+    <div id="startp_set_code_div" style="display: none">
+      <!-- form id="startp_set_code_form" method="post" action="#" -->
+      <table>
+        <tr>
+          <td><label id="startp_set_code_label"
+            for="startp_set_code">Code</label></td>
+          <td><input id="startp_set_code" type="text"></td>
+          <td><input id="startp_set_code_submit" type="submit"
+            data-icon="arrow-r" data-iconpos="notext" value="Submit"></td>
+        </tr>
+      </table>
+      <!--/form-->
+    </div>
+
+    <div id="confirm_start_delete" class="ui-content" data-role="popup"
+      style="display: none;">
+      <p id="delete_startp_question">Are you sure you want to
+        delete?</p>
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <a id="confirm_startp_delete_yes"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">ja</a>
+        </div>
+        <div class="ui-block-b">
+          <a id="confirm_startp_delete_cancel"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">abbrechen</a>
+        </div>
+      </div>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
 
-		</div>
-
-		<div id="startp_set_code_div" style="display: none">
-			<!-- form id="startp_set_code_form" method="post" action="#" -->
-			<table width="100%">
-				<tr>
-					<td><label id="startp_set_code_label" for="startp_set_code">Code</label></td>
-					<td><input id="startp_set_code" type="text"></td>
-					<td><input id="startp_set_code_submit" type="submit"
-						action="#URL#" method="get" data-icon="arrow-r"
-						data-iconpos="notext" value="Submit"></td>
-				</tr>
-			</table>
-			<!--/form-->
-		</div>
-
-		<div id="confirm_start_delete" class="ui-content" data-role="popup"
-			style="display: none;">
-			<p id="delete_startp_question">Are you sure you want to delete?</p>
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a id="confirm_startp_delete_yes"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">ja</a>
-				</div>
-				<div class="ui-block-b">
-					<a id="confirm_startp_delete_cancel"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">abbrechen</a>
-				</div>
-			</div>
-		</div>
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      **************************  
+      *** home_page teacher  *** 
+      ************************** 
+      -->
+  <div data-role="page" id="home_page" class="ui-page-theme-b">
+    <div data-role="header">
+      <a href="#help_page" data-icon="info" class="ui-btn-left">Help</a>
+      <h1>Home</h1>
+      <a id="home_goto_me" href="#profile_detail_page" data-icon="user"
+        class="ui-btn-right" style="display: none">Me</a>
+      <!-- TODO: href=#country_page client.isAddingClass = true -->
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_myclass" data-type="search"
+            placeholder="search my classes ...">
+        </form>
+      </div>
+      <ul id="choose_home_list" data-role="listview" data-filter="true"
+        data-autodividers="true" data-inset="true"
+        data-input="#choose_myclass">
+      </ul>
 
 
-	<!-- 
-	  **************************  
-	  *** home_page teacher  *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="home_page" class="ui-page-theme-b">
-		<div data-role="header">
-			<a href="#help_page" data-icon="info" class="ui-btn-left">Help</a>
-			<h1>Home</h1>
-			<a id="home_goto_me" href="#profile_detail_page" data-icon="user"
-				class="ui-btn-right" style="display: none">Me</a>
-			<!-- TODO: href=#country_page client.isAddingClass = true -->
-		</div>
-		<div data-role="content">
-			<div member="ui-field-contain">
-				<form member="ui-filterable">
-					<input id="choose_myclass" method="get" action="#URL#"
-						data-type="search" placeholder="search my classes ...">
-				</form>
-			</div>
-			<ul id="choose_home_list" data-role="listview" data-filter="true"
-				data-autodividers="true" data-inset="true"
-				data-input="#choose_myclass" />
+    </div>
+
+    <div id="confirm_home_delete" class="ui-content" data-role="popup"
+      style="display: none;">
+      <p id="delete_home_question">Are you sure you want to delete?</p>
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <a id="confirm_home_delete_yes"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Yes</a>
+        </div>
+        <div class="ui-block-b">
+          <a id="confirm_home_delete_cancel"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Cancel</a>
+        </div>
+      </div>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
 
-		</div>
+  <!-- 
+      ***************************  
+      *** country_page *** 
+      *************************** 
+      -->
+  <div data-role="page" id="country_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Countries</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable">
+          <input id="choose_country" data-type="search"
+            placeholder="We live in ...">
+        </form>
+      </div>
+      <ul id="choose_country_list" data-role="listview"
+        data-filter="true" data-inset="true" data-autodividers="true"
+        data-input="#choose_country">
+      </ul>
+    </div>
+    <div data-role="footer">selected:</div>
+  </div>
 
-		<div id="confirm_home_delete" class="ui-content" data-role="popup"
-			style="display: none;">
-			<p id="delete_home_question">Are you sure you want to delete?</p>
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a id="confirm_home_delete_yes"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
-				</div>
-				<div class="ui-block-b">
-					<a id="confirm_home_delete_cancel"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
-				</div>
-			</div>
-		</div>
-		<div data-role="footer"></div>
-	</div>
-
-
-	<!-- 
-	  ***************************  
-	  *** country_page *** 
-	  *************************** 
-	  -->
-	<div data-role="page" id="country_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Countries</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_country" data-type="search"
-						placeholder="We live in ...">
-				</form>
-			</div>
-			<ul id="choose_country_list" data-role="listview" data-filter="true"
-				data-inset="true" data-autodividers="true"
-				data-input="#choose_country">
-		</div>
-		<div data-role="footer">selected:</div>
-	</div>
-
-	<!-- 
-	  ************************  
-	  *** city_page ***
-	  ************************ 
-	  -->
-	<div data-role="page" id="city_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Cities</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_city" method="get" action="#URL#"
-						data-type="search" placeholder="We live in ..." />
-				</form>
-			</div>
-			<ul id="choose_city_list" data-role="listview" data-filter="true"
-				data-inset="true" data-autodividers="true" data-input="#choose_city" />
-		</div>
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      ************************  
+      *** city_page ***
+      ************************ 
+      -->
+  <div data-role="page" id="city_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Cities</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_city" data-type="search"
+            placeholder="We live in ..." />
+        </form>
+      </div>
+      <ul id="choose_city_list" data-role="listview" data-filter="true"
+        data-inset="true" data-autodividers="true"
+        data-input="#choose_city">
+      </ul>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
 
-	<!-- 
-	  **************************  
-	  *** school_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="school_page" class="ui-page-theme-b">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Schools</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_school" method="get" action="#URL#"
-						data-type="search" placeholder="Our school ..." />
-				</form>
-			</div>
-			<div id="choose_school_list_parent">
-			  <ul id="choose_school_list" data-role="listview" data-filter="true"
-				data-inset="true" data-autodividers="true"
-				data-input="#choose_school" />
-			</div>
-		</div>
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      **************************  
+      *** school_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="school_page" class="ui-page-theme-b">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Schools</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_school" data-type="search"
+            placeholder="Our school ..." />
+        </form>
+      </div>
+      <div id="choose_school_list_parent">
+        <ul id="choose_school_list" data-role="listview"
+          data-filter="true" data-inset="true" data-autodividers="true"
+          data-input="#choose_school">
+        </ul>
+      </div>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
 
-	<!-- 
-	  **************************  
-	  *** class_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="class_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Classes</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_class" method="get" action="#URL#"
-						data-type="search" placeholder="Our class ...">
-				</form>
-			</div>
-			<ul id="choose_class_list" data-role="listview" data-filter="true"
-				data-inset="true" data-autodividers="true"
-				data-input="#choose_class">
-		</div>
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      **************************  
+      *** class_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="class_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Classes</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_class" data-type="search"
+            placeholder="Our class ...">
+        </form>
+      </div>
+      <ul id="choose_class_list" data-role="listview" data-filter="true"
+        data-inset="true" data-autodividers="true"
+        data-input="#choose_class">
+      </ul>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
 
-	<!-- 
-	  **************************  
-	  *** member_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="member_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Class</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_member" method="get" action="#URL#"
-						data-type="search" placeholder="search class contents ...">
-				</form>
-			</div>
-			<ul id="choose_member_list" data-role="listview" data-filter="true"
-				data-inset="true" data-input="#choose_member">
-		</div>
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      **************************  
+      *** member_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="member_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Class</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_member" data-type="search"
+            placeholder="search class contents ...">
+        </form>
+      </div>
+      <ul id="choose_member_list" data-role="listview"
+        data-filter="true" data-inset="true" data-input="#choose_member">
+      </ul>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
 
-	<!-- 
-	  **************************  
-	  *** parent_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="parent_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Parents</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_parent" method="get" action="#URL#"
-						data-type="search" placeholder="search parents ...">
-				</form>
-			</div>
-			<ul id="choose_parent_list" data-role="listview" data-filter="true"
-				data-inset="true" data-autodividers="true"
-				data-input="#choose_parent">
-		</div>
-		<!-- TODO: do not allow to delete identified members -->
-		<div id="confirm_parent_delete" class="ui-content" data-role="popup"
-			style="display: none;">
-			<p id="delete_home_question">Are you sure you want to delete?</p>
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a id="confirm_parent_delete_yes"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
-				</div>
-				<div class="ui-block-b">
-					<a id="confirm_parent_delete_cancel"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
-				</div>
-			</div>
-		</div>
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      **************************  
+      *** parent_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="parent_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Parents</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_parent" data-type="search"
+            placeholder="search parents ...">
+        </form>
+      </div>
+      <ul id="choose_parent_list" data-role="listview"
+        data-filter="true" data-inset="true" data-autodividers="true"
+        data-input="#choose_parent">
+      </ul>
+    </div>
+    <!-- TODO: do not allow to delete identified members -->
+    <div id="confirm_parent_delete" class="ui-content" data-role="popup"
+      style="display: none;">
+      <p id="delete_home_question">Are you sure you want to delete?</p>
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <a id="confirm_parent_delete_yes"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Yes</a>
+        </div>
+        <div class="ui-block-b">
+          <a id="confirm_parent_delete_cancel"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Cancel</a>
+        </div>
+      </div>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
-	<!-- 
-	  **************************  
-	  *** teacher_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="teacher_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Teachers</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_teacher" method="get" action="#URL#"
-						data-type="search" placeholder="search teacher ...">
-				</form>
-			</div>
-			<ul id="choose_teacher_list" data-role="listview" data-filter="true"
-				data-inset="true" data-autodividers="true"
-				data-input="#choose_teacher">
-		</div>
-		<div id="confirm_teacher_delete" class="ui-content" data-role="popup"
-			style="display: none;">
-			<p id="delete_teacher_question">Are you sure you want to delete?</p>
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a id="confirm_teacher_delete_yes"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
-				</div>
-				<div class="ui-block-b">
-					<a id="confirm_teacher_delete_cancel"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
-				</div>
-			</div>
-		</div>
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      **************************  
+      *** teacher_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="teacher_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Teachers</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_teacher" data-type="search"
+            placeholder="search teacher ...">
+        </form>
+      </div>
+      <ul id="choose_teacher_list" data-role="listview"
+        data-filter="true" data-inset="true" data-autodividers="true"
+        data-input="#choose_teacher">
+      </ul>
+    </div>
+    <div id="confirm_teacher_delete" class="ui-content"
+      data-role="popup" style="display: none;">
+      <p id="delete_teacher_question">Are you sure you want to
+        delete?</p>
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <a id="confirm_teacher_delete_yes"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Yes</a>
+        </div>
+        <div class="ui-block-b">
+          <a id="confirm_teacher_delete_cancel"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Cancel</a>
+        </div>
+      </div>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
-	<!-- 
-	  **************************  
-	  *** student_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="student_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Students</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_student" method="get" action="#URL#"
-						data-type="search" placeholder="search student ...">
-				</form>
-			</div>
-			<ul id="choose_student_list" data-role="listview" data-filter="true"
-				data-inset="true" data-autodividers="true"
-				data-input="#choose_student">
-		</div>
-		<div id="confirm_student_delete" class="ui-content" data-role="popup"
-			style="display: none;">
-			<p id="delete_student_question">Are you sure you want to delete?</p>
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a id="confirm_student_delete_yes"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
-				</div>
-				<div class="ui-block-b">
-					<a id="confirm_student_delete_cancel"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
-				</div>
-			</div>
-		</div>
-		<div data-role="footer"></div>
-	</div>
-
-
-	<!-- 
-	  **************************  
-	  *** add_member_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="add_member_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Einladen</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_invite" method="get" action="#URL#"
-						data-type="search" placeholder="search in contacts ...">
-				</form>
-			</div>
-		</div>
-		<div data-role="footer"></div>
-	</div>
-	
-	
-	<!-- 
-	  **************************  
-	  *** add_mykid_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="add_mykid_page" class="ui-page-theme-b">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>neuer Schüler</h1>
-			<!-- a id="save_mykid_form" href="#" data-icon="check" class="ui-btn-right">OK</a -->
-		</div>
-		
-		<div id="add_mykid_name_form">
-		  <!-- form id="add_mykid_form" method="post" action="#" -->
-		    <label id="add_mykid_name_label" for="add_mykid_name"> Name </label>
-			<input id="add_mykid_name" type="text" placeholder="Schüler">
-		</p>	
-		  <!--/form-->
-		</div>
-		
-		<div id="choose_add_mykid_city" data-role="content" style="display: none">
-		  Schulgemeinde
-		  <div class="ui-field-contain">
-		    <form class="ui-filterable">
-		      <input id="choose_add_mykid" method="get" action="#URL#" data-type="search" placeholder="Ort">
-		      <div id="choose_add_mykid_list_parent">
-		        <ul id="choose_add_mykid_list" data-role="listview" data-filter="true" data-inset="true" data-input="#choose_add_mykid"/>
-		      </div>
-		    </form>
-		  </div>
-		</div>
-				  
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      **************************  
+      *** student_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="student_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Students</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_student" data-type="search"
+            placeholder="search student ...">
+        </form>
+      </div>
+      <ul id="choose_student_list" data-role="listview"
+        data-filter="true" data-inset="true" data-autodividers="true"
+        data-input="#choose_student">
+      </ul>
+    </div>
+    <div id="confirm_student_delete" class="ui-content"
+      data-role="popup" style="display: none;">
+      <p id="delete_student_question">Are you sure you want to
+        delete?</p>
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <a id="confirm_student_delete_yes"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Yes</a>
+        </div>
+        <div class="ui-block-b">
+          <a id="confirm_student_delete_cancel"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Cancel</a>
+        </div>
+      </div>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
 
-	<!-- 
-	  **************************  
-	  *** profile_detail_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="profile_detail_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Profile</h1>
-			<a id="invite_form" href="#" data-icon="action" class="ui-btn-right">Invite</a>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form profile="ui-filterable">
-					<input id="choose_profile" method="get" action="#URL#"
-						data-type="search" placeholder="search">
-				</form>
-			</div>
-			<ul id="choose_profile_detail_list" data-role="listview"
-				data-filter="true" data-inset="true" data-input="#choose_profile">
-		</div>
-		<div id="confirm_profile_detail_delete" class="ui-content"
-			data-role="popup" style="display: none;">
-			<p id="delete_profile_detail_question">Are you sure you want to
-				delete?</p>
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a id="confirm_profile_detail_delete_yes"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
-				</div>
-				<div class="ui-block-b">
-					<a id="confirm_profile_detail_delete_cancel"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
-				</div>
-			</div>
-		</div>
-		<div id="confirm_invite" class="ui-content" data-role="popup"
-			style="display: none;">
-			<p id="confirm_invite_question">Invite?</p>
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a id="confirm_invite_yes"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
-				</div>
-				<div class="ui-block-b">
-					<a id="confirm_invite_cancel"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
-				</div>
-			</div>
-		</div>
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      **************************  
+      *** add_member_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="add_member_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Einladen</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_invite" data-type="search"
+            placeholder="search in contacts ...">
+        </form>
+      </div>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
 
-	<!-- 
-	  **************************  
-	  *** homework_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="homework_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Homework</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_homework" method="get" action="#URL#"
-						data-type="search" placeholder="find homework ...">
-				</form>
-			</div>
-			<ul id="choose_homework_list" data-role="listview" data-filter="true"
-				data-inset="true" data-input="#choose_homework" />
-		</div>
-		<div id="confirm_homework_delete" class="ui-content" data-role="popup"
-			style="display: none;">
-			<p id="delete_homework_question">Are you sure you want to delete?</p>
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<a id="confirm_homework_delete_yes"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
-				</div>
-				<div class="ui-block-b">
-					<a id="confirm_homework_delete_cancel"
-						class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
-				</div>
-			</div>
-		</div>
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      **************************  
+      *** add_mykid_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="add_mykid_page" class="ui-page-theme-b">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>neuer Schüler</h1>
+      <!-- a id="save_mykid_form" href="#" data-icon="check" class="ui-btn-right">OK</a -->
+    </div>
+
+    <div id="add_mykid_name_form">
+      <!-- form id="add_mykid_form" method="post" action="#" -->
+      <label id="add_mykid_name_label" for="add_mykid_name">
+        Name </label> <input id="add_mykid_name" type="text"
+        placeholder="Schüler">
+      <!--/form-->
+    </div>
+
+    <div id="choose_add_mykid_city" data-role="content"
+      style="display: none">
+      Schulgemeinde
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_add_mykid" data-type="search"
+            placeholder="Ort">
+          <div id="choose_add_mykid_list_parent">
+            <ul id="choose_add_mykid_list" data-role="listview"
+              data-filter="true" data-inset="true"
+              data-input="#choose_add_mykid">
+            </ul>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div data-role="footer"></div>
+  </div>
 
 
-	<!-- 
-	  ****************************  
-	  *** homework_detail_page *** 
-	  **************************** 
-	  -->
-	<div data-role="page" id="homework_detail_page">
-		<div data-role="header" data-add-back-btn="true">
-			<h1>Homework X</h1>
-			<a id="homework_add_form" href="#" data-icon="check"
-				class="ui-btn-right">Save</a>
-		</div>
-		<div data-role="content">
-			<div class=ui-content>
-				<form id=choose_homework_detail_list method="post" action="#URL#">
-					<div class=ui-field-contain>
-						<label for=homework_title>Title</label><input id=homework_title
-							type=text value='english voci p38'> <label
-							for=homework_due>Due </label><input id=homework_due type=date>
-						<label for=homework_my_progress>My progress</label><input
-							id=homework_my_progress type=range min=0 max=100 value=0 step=5
-							data-show-value=true> <label for=homework_fach>Subject</label><input
-							id=homework_fach type=text value='english conversation I'>
-						<label for=homework_text>Task</label>
-						<textarea id=homework_text
-							placeholder='enter description here (visible to other students)'></textarea>
-						<label for=homework_my_notes>My notes</label>
-						<textarea id=homework_my_notes
-							placeholder='enter personal comments here (not visible to other students)'></textarea>
-						<label for=homework_is_private>private</label><input
-							id=homework_is_private type=checkbox>
-						<!-- label class=ui-hidden-accessible for=homework_submit></label><input id=homework_submit type=submit value=collaborate -->
-					</div>
-				</form>
-			</div>
-		</div>
+  <!-- 
+      **************************  
+      *** profile_detail_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="profile_detail_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Profile</h1>
+      <a id="invite_form" href="#" data-icon="action"
+        class="ui-btn-right">Invite</a>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_profile" data-type="search"
+            placeholder="search">
+        </form>
+      </div>
+      <ul id="choose_profile_detail_list" data-role="listview"
+        data-filter="true" data-inset="true"
+        data-input="#choose_profile">
+      </ul>
+    </div>
+    <div id="confirm_profile_detail_delete" class="ui-content"
+      data-role="popup" style="display: none;">
+      <p id="delete_profile_detail_question">Are you sure you want
+        to delete?</p>
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <a id="confirm_profile_detail_delete_yes"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Yes</a>
+        </div>
+        <div class="ui-block-b">
+          <a id="confirm_profile_detail_delete_cancel"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Cancel</a>
+        </div>
+      </div>
+    </div>
+    <div id="confirm_invite" class="ui-content" data-role="popup"
+      style="display: none;">
+      <p id="confirm_invite_question">Invite?</p>
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <a id="confirm_invite_yes"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Yes</a>
+        </div>
+        <div class="ui-block-b">
+          <a id="confirm_invite_cancel"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Cancel</a>
+        </div>
+      </div>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
-		<div data-role="footer"></div>
-	</div>
+
+  <!-- 
+      **************************  
+      *** homework_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="homework_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Homework</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_homework" data-type="search"
+            placeholder="find homework ...">
+        </form>
+      </div>
+      <ul id="choose_homework_list" data-role="listview"
+        data-filter="true" data-inset="true"
+        data-input="#choose_homework">
+      </ul>
+    </div>
+    <div id="confirm_homework_delete" class="ui-content"
+      data-role="popup" style="display: none;">
+      <p id="delete_homework_question">Are you sure you want to
+        delete?</p>
+      <div class="ui-grid-a">
+        <div class="ui-block-a">
+          <a id="confirm_homework_delete_yes"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Yes</a>
+        </div>
+        <div class="ui-block-b">
+          <a id="confirm_homework_delete_cancel"
+            class="ui-btn ui-corner-all ui-mini ui-btn-a"
+            data-rel="back">Cancel</a>
+        </div>
+      </div>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
 
-	<!-- 
-	  **************************  
-	  *** help_page *** 
-	  ************************** 
-	  -->
-	<div data-role="page" id="help_page">
-		<div data-role="header">
-			<a href="#home_page" data-icon="info" class="ui-btn-left">Help</a>
-			<h1>Help</h1>
-		</div>
-		<div data-role="content">
-			<div class="ui-field-contain">
-				<form class="ui-filterable">
-					<input id="choose_help" method="get" action="#URL#"
-						data-type="search" placeholder="search in help ...">
-				</form>
-			</div>
-		</div>
-		<div data-role="footer"></div>
-	</div>
+  <!-- 
+      ****************************  
+      *** homework_detail_page *** 
+      **************************** 
+      -->
+  <div data-role="page" id="homework_detail_page">
+    <div data-role="header" data-add-back-btn="true">
+      <h1>Homework X</h1>
+      <a id="homework_add_form" href="#" data-icon="check"
+        class="ui-btn-right">Save</a>
+    </div>
+    <div data-role="content">
+      <div class=ui-content>
+        <form id=choose_homework_detail_list method="post"
+          action="#URL#">
+          <div class=ui-field-contain>
+            <label for=homework_title>Title</label><input
+              id=homework_title type=text value='english voci p38'>
+            <label for=homework_due>Due </label><input id=homework_due
+              type=date> <label for=homework_my_progress>My
+              progress</label><input id=homework_my_progress type=range min=0
+              max=100 value=0 step=5 data-show-value=true> <label
+              for=homework_fach>Subject</label><input id=homework_fach
+              type=text value='english conversation I'> <label
+              for=homework_text>Task</label>
+            <textarea id=homework_text
+              placeholder='enter description here (visible to other students)'></textarea>
+            <label for=homework_my_notes>My notes</label>
+            <textarea id=homework_my_notes
+              placeholder='enter personal comments here (not visible to other students)'></textarea>
+            <label for=homework_is_private>private</label><input
+              id=homework_is_private type=checkbox>
+            <!-- label class=ui-hidden-accessible for=homework_submit></label><input id=homework_submit type=submit value=collaborate -->
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div data-role="footer"></div>
+  </div>
+
+
+  <!-- 
+      **************************  
+      *** help_page *** 
+      ************************** 
+      -->
+  <div data-role="page" id="help_page">
+    <div data-role="header">
+      <a href="#home_page" data-icon="info" class="ui-btn-left">Help</a>
+      <h1>Help</h1>
+    </div>
+    <div data-role="content">
+      <div class="ui-field-contain">
+        <form class="ui-filterable" method="get" action="#URL#">
+          <input id="choose_help" data-type="search"
+            placeholder="search in help ...">
+        </form>
+      </div>
+    </div>
+    <div data-role="footer"></div>
+  </div>
 
 
 
