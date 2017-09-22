@@ -18,23 +18,31 @@
 		<script type="text/javascript" src="cordova.js"></script><!-- not used before compile time -->
 		
         <script>
-	
+
+/**
+ * global ajax error handling
+ */ 	
 $( document ).ajaxError(function( event, request, settings, error ) {
-  // global ajax error handling
   var httpStatusCode = request.getResponseHeader("status"); // It is worth noting that browsers report a status of 0 in case of XMLHttpRequest errors too. https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/status
   var clientMsg = "Got error " + error + "\n on " + settings.type + " " + settings.url + "\n from app " + event.currentTarget.URL + " \n " + request.status + " " + request.statusText + " (" + httpStatusCode + ")";
-  alert(clientMsg); //FIXME: remove, log 
-  $( "div div:jqmData(role=footer)" ).append( "<li><font color='red'>" + clientMsg + "</font></li>" );
+  alert(clientMsg); //FIXME: remove, log
+  console.log(clientMsg);
+  //$( "div div:jqmData(role=footer)" ).append( "<li><font color='red'>" + clientMsg + "</font></li>" );
 });
     
-	// Respond to back/forward navigation
+/**
+ * Respond to back/forward navigation
+ */
 $( window ).on( "navigate", function( event, data ){
-  if( data.state.foo ){
+  if( data.state.url){
     // Make use of the arbitrary data stored
+    
   }
 
   if( data.state.direction == "back" ) {
     // Make use of the directional information
+    console.log("back to? url=" + data.state.url + " from " + event.parent.id);
+    
   }
 
   // reset the content based on the url
@@ -66,7 +74,7 @@ $( window ).on( "navigate", function( event, data ){
 	--- city_page --- 
 	--------------------------- 
 	*/
-	  
+	//TODO: delete page, is inlined into add_mykid_page
 	client.preparePage("city", "school", function(event) {
 	      client.saveEntity("city","school",event.target.text);
 		  client.chosenCity = event.target.text;
@@ -88,11 +96,13 @@ $( window ).on( "navigate", function( event, data ){
 	client.preparePage("school", "class", function(event) {
 	      client.saveEntity("school","class",event.target.text);
 		  client.chosenSchool = event.target.text;
+		  client.chosenSchoolId = event.target.id;
 	    },
 		function(event) {
 		  var added = $("#school_page div:jqmData(role=content) form table input").val();
 	      client.addEntity("school","class",added);
 		  client.chosenSchool = added;
+		  client.chosenSchoolId = event.target.id;
 	    }
 	);
 	
@@ -255,6 +265,7 @@ $( window ).on( "navigate", function( event, data ){
 	client.prepareMyKidPage();
 
     $(document).on("pagecreate","#add_mykid_page",function(){
+    
       //register validation for name
       $("#add_mykid_name").focus(function(){
         $('#add_mykid_name').next(".red").remove();
@@ -268,11 +279,17 @@ $( window ).on( "navigate", function( event, data ){
           $("#add_mykid_page #choose_add_mykid_city").hide();
         } else {
           $('#add_mykid_name').next(".red").remove();
-          $("#add_mykid_page #choose_add_mykid_city").show();
+          if (!client.loadingCities) {
+            $('#add_mykid_name').next(".lade").remove();
+            $("#add_mykid_page #choose_add_mykid_city").show();
+          } else {
+            $('#add_mykid_name').after('<div class="lade"><font color="lightblue">lade Orte ...</font></div>');
+          }
           return true;
         }
       });
     });
+    
     
 	
 	
@@ -567,11 +584,11 @@ $( window ).on( "navigate", function( event, data ){
 			<div class="ui-field-contain">
 				<form class="ui-filterable">
 					<input id="choose_city" method="get" action="#URL#"
-						data-type="search" placeholder="We live in ...">
+						data-type="search" placeholder="We live in ..." />
 				</form>
 			</div>
 			<ul id="choose_city_list" data-role="listview" data-filter="true"
-				data-inset="true" data-autodividers="true" data-input="#choose_city">
+				data-inset="true" data-autodividers="true" data-input="#choose_city" />
 		</div>
 		<div data-role="footer"></div>
 	</div>
@@ -582,7 +599,7 @@ $( window ).on( "navigate", function( event, data ){
 	  *** school_page *** 
 	  ************************** 
 	  -->
-	<div data-role="page" id="school_page">
+	<div data-role="page" id="school_page" class="ui-page-theme-b">
 		<div data-role="header" data-add-back-btn="true">
 			<h1>Schools</h1>
 		</div>
@@ -590,12 +607,14 @@ $( window ).on( "navigate", function( event, data ){
 			<div class="ui-field-contain">
 				<form class="ui-filterable">
 					<input id="choose_school" method="get" action="#URL#"
-						data-type="search" placeholder="Our school ...">
+						data-type="search" placeholder="Our school ..." />
 				</form>
 			</div>
-			<ul id="choose_school_list" data-role="listview" data-filter="true"
+			<div id="choose_school_list_parent">
+			  <ul id="choose_school_list" data-role="listview" data-filter="true"
 				data-inset="true" data-autodividers="true"
-				data-input="#choose_school">
+				data-input="#choose_school" />
+			</div>
 		</div>
 		<div data-role="footer"></div>
 	</div>
@@ -796,7 +815,7 @@ $( window ).on( "navigate", function( event, data ){
 		<div id="add_mykid_name_form">
 		  <!-- form id="add_mykid_form" method="post" action="#" -->
 		    <label id="add_mykid_name_label" for="add_mykid_name"> Name </label>
-			<input id="add_mykid_name" type="text" placeholder="Schüler" style="color: white">
+			<input id="add_mykid_name" type="text" placeholder="Schüler">
 		</p>	
 		  <!--/form-->
 		</div>

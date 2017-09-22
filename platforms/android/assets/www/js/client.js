@@ -2,7 +2,8 @@
     device independent client side logic.
     Copyright by opendata4ar
  */
- 
+const kantone = new Array('?','zh','be','lu','ur','sz','ow','nw','gl','zg','fr','so','bs','bl','sh','ar','ai','sg','gr','ag','tg','ti','vd','vs','ne','ge','ju'); 
+
 var client = {
  
     saveEntity: function(entity,next,selected) {
@@ -111,8 +112,11 @@ var client = {
 	},
 	
 	fillContents: function(page) {
-	    // clean and re-populate the list (TODO: connect again?)
-		var content = server.load(page, client.getMyAccessCode());
+      if (page == "school") {
+	    var content = server.load(page, client.chosenCityId);
+      } else {
+        var content = server.load(page, client.getMyAccessCode());
+      }
 		var main = $("#" + page + "_page div:jqmData(role=content)");
 		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
 		if (contentContainer == undefined || contentContainer.length == 0) {
@@ -126,52 +130,118 @@ var client = {
 	
 	fill: function(page, entity) {
 		var content = server.load(entity, client.getMyAccessCode());
-		// fix data-input
-		// content = content.replace("data-input='#choose_" + entity + "'", "id='choose_add_mykid_list' data-autodividers='true' data-input='#choose_" + page + "' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'");
-		content = content.replace("data-input='#choose_" + entity + "'", "id='choose_add_mykid_list' data-input='#choose_" + page + "' ");
-		
 		var main = $("#" + page + "_page div:jqmData(role=content)");
-		var contentContainer = $("#" + page + "_page div:jqmData(role=content) #choose_" + page + "_list");
-		if (contentContainer == undefined || contentContainer.length == 0) {
-		  main.append(content).trigger("create");
-		} else {
-		  contentContainer.empty();
-		  contentContainer.append (content).trigger("create");
-		}
 		$("#add_mykid_page #add_city_form").hide();
 		return main;
 	},
 	
 	applyCities: function( citiesAsJson ) {
-		var citiesRaw = JSON.stringify(citiesAsJson);
-      	alert( "... loaded cities: \n " + citiesRaw);
+		console.log( "... loaded " + citiesAsJson.length + " cities");
+		//var citiesRaw = JSON.stringify(citiesAsJson);
+        //console.debug(citiesRaw);
       	// convert to <li> (here because is also required by local db)
       	// from [{"id":2761,"label":"Aesch (BL)","kanton_id":13},{"id":2769,"label":"Münchenstein","kanton_id":13}]
       	// to   <li><a href=#school_page>Burgdorf<span class=ui-li-count> 6</span></a></li>
       	var citiesListView = "<ul id=choose_add_mykid_list data-role=listview data-filter=true data-inset=true data-autodividers=true data-input=#choose_add_mykid>";
       	
       	for (var i=0,  len=citiesAsJson.length; i < len; i++) {
-      		var cityName = citiesAsJson[i].label;
-      	  citiesListView += "<li data-filtertext=" + cityName + "><a href=#school_page/" + citiesAsJson[i].id + ">" + cityName + "</a></li>";
+      	  var cityName = citiesAsJson[i].label;
+      	  var kt = kantone[citiesAsJson[i].kanton_id].toUpperCase();
+      	  citiesListView += "<li data-filtertext='" + cityName + "'><a id=" + citiesAsJson[i].id + " href=#school_page><img src=./res/icon/kantone/" + kt + ".png  alt=" + kt + " class=ui-li-icon>" + cityName + "</a></li>";
       	}
       	citiesListView += "</ul>";
-        alert("built "+ citiesListView);
 
       	var main = $("#city_page div:jqmData(role=content)");
   		var contentContainer = $("#add_mykid_page div:jqmData(role=content) #choose_add_mykid_list").parent();
+        $("#add_mykid_page #choose_add_mykid_city").show();
   		if (contentContainer == undefined || contentContainer.length == 0) {
   		  main.append(citiesListView).trigger("create");
   		} else {
   		  contentContainer.empty(); // be careful not to delete search!
   		  contentContainer.append (citiesListView).trigger("create");
   		}
+        client.loadingCities = false;
+        $('#add_mykid_name').next(".lade").remove();
+    },
+    
+    formatSchoolName: function (schoolName) {
+      //TODO: delete me, not in use
+      shorthand = schoolName.replace("Schulhaus ","");
+      shorthand = shorthand.replace("Volksschule ","");
+      shorthand = shorthand.replace("Schulzentrum ","");
+      shorthand = shorthand.replace("Schulhäuser ","");
+      
+      if (shorthand.startsWith("Kindergarten ")) {
+        shorthand = shorthand.substring(13) + " (Kindergarten)";
+      }
+      if (shorthand.startsWith("Primarschule ")) {
+        shorthand = shorthand.substring(13) + " (Primar)";
+      }
+      if (shorthand.startsWith("Sekundarschule ")) {
+        shorthand = shorthand.substring(15) + " (Sek.)";
+      }
+      if (shorthand.startsWith("Sekundarstufe ")) {
+        shorthand = shorthand.substring(14) + " (Sek.)";        
+      }
+      if (shorthand.startsWith("Oberstufenschule ")) {
+        shorthand = shorthand.substring(17) + " (Oberstufe)";                
+      }
+      if (shorthand.startsWith("Oberstufenzentrum ")) {
+        shorthand = shorthand.substring(18) + " (Oberstufe)";                        
+      }
+      if (shorthand.startsWith("Schule ")) {
+        shorthand = shorthand.substring(7);
+      }
+      return shorthand;
     },
       
+    applySchools: function( schoolsAsJson ) {
+      var end = Date.now();
+      console.log(new Date().toISOString() + "... loaded " + schoolsAsJson.length + " schools in " + (end - client.loadingSchools) + " ms");
+      //var schoolsRaw = JSON.stringify(schoolsAsJson);
+      //console.debug(schoolsRaw);
+      // convert to <li> (here because is also required by local db)
+      // from [{"id":5475,"label":"Schule Heiligenschwendi","kind":"Total Schule","city_id":927,"kanton_id":2,"validTo":null},{"id":5476,"label":"Schule Heiligenschwendi","kind":"Vorschulstufe","city_id":927,"kanton_id":2,"validTo":null},{"id":5477,"label":"Schule Heiligenschwendi","kind":"Primarstufe","city_id":927,"kanton_id":2,"validTo":null}]
+      // to   <li><a href=#class_page>Primarschule Dorf<span class=ui-li-count> 2</span></a></li>
+   
+      var schoolListView = "<ul id=choose_school_list data-role=listview data-filter=true data-inset=true data-autodividers=true data-input=#choose_school>";
+      var prevSchoolName = "";
+      for (var i=0,  len=schoolsAsJson.length; i < len; i++) {
+        var schoolName = schoolsAsJson[i].label;
+        if (prevSchoolName != schoolName) {
+          // hide "duplicates"
+          var schoolId = schoolsAsJson[i].id;
+          var kt = kantone[schoolsAsJson[i].kanton_id].toUpperCase();
+          //var schoolNameShort = client.formatSchoolName(schoolName);
+          schoolListView += "<li data-filtertext='" + schoolName + "'>";
+          schoolListView += "<a id=" + schoolId + " href=#class_page><img src=./res/icon/kantone/" + kt + ".png alt=" + kt + " class=ui-li-icon>"
+          schoolListView += schoolName + "</a></li>";
+          prevSchoolName = schoolName;
+        }
+      }
+      schoolListView += "</ul>";
+
+      var main = $("#school_page div:jqmData(role=content)");
+      var contentContainer = $("#school_page div:jqmData(role=content) #choose_school_list").parent();
+      //??? $("#add_mykid_page #choose_add_mykid_city").show();
+      if (contentContainer == undefined || contentContainer.length == 0) {
+        main.append(schoolListView).trigger("create");
+      } else {
+        contentContainer.empty(); // be careful not to delete search!
+        contentContainer.append (schoolListView).trigger("create");
+      }
+      client.loadingSchools = false;
+      //??? $('#add_mykid_name').next(".lade").remove();
+  },
+    
 	
 	
 	preparePage: function(page, next, drilldownCallback, addItemCallback) {
 	  $( document ).on( "pagecreate", "#" + page + "_page", function() {
-		
+	    
+	    if (page == "school") {
+          client.loadingSchools = Date.now(); //FIXME move elsewhere
+	    }
 		var main = client.fillContents(page);
 		
 		var addForm = $("#" + page + "_page div:jqmData(role=content) #add_" + page + "_form");
@@ -289,10 +359,14 @@ var client = {
 	prepareMyKidPage: function() {
 	    var page ="add_mykid";
 	    var next = "school";
+        client.loadingCities = false;
 	    client.preparePage(page, next,
 	    function(event) {
 		  // drilldown into school
+
+	      // remember kid's name and city chosen
 		  client.chosenCity = event.target.text;
+          client.chosenCityId = event.target.id;
 		  client.chosenKid = $("#add_mykid_name").val();
 	      client.saveEntity("mykid","city", client.chosenKid);
 	      client.saveEntity("city","school", event.target.text);
@@ -300,15 +374,10 @@ var client = {
 	      
 	    },
 		function(event) {
-		  // addItemCallback new city
-		  client.chosenKid = $("#add_mykid_name").val();
-	      client.saveEntity("mykid","city", client.chosenKid);
-	      
-	      $("#school_page div:jqmData(role=header) h1").text(client.chosenKid + "'s Schule");
-	      
+		  // addItemCallback show all cities
+	      client.loadingCities = true;
 	      client.fill("add_mykid", "city"); //show all cities
-		  $("#add_mykid_page #add_city_form").hide();
-		  
+		  $("#add_mykid_page #add_city_form").hide();		  
 	    });
 	},
 	

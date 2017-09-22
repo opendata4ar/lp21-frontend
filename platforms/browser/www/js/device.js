@@ -25,14 +25,12 @@ var gap = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
 		if (navigator.contacts == null) {
-		  alert("no access to device(" + navigator + ")");
+		  console.log("no access to device(" + navigator + ")");
 		}
         console.log('Received Event: ' + id);
 		gap.isReady = true;
-		html5sql.openDatabase("myclass.opendata4ar@gmail.com", "MyClass", 100000);
-		//$.get('db.sql', function(ddl) {
-		  html5sql.process(ddl, function() { alert("populate: success");},function(error) { alert("populate failed " + error); });
-		//});
+		html5sql.openDatabase("myclass.opendata4ar@gmail.com", "MyClass", 100000); //FIXME: update populate and remove test data	    
+		html5sql.process(ddl, function() { console.log("populate: success");},function(error) { alert("populate failed " + error); });
     },
 	
 	// Called when a photo is successfully retrieved

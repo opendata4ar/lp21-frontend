@@ -18,9 +18,11 @@
 		<script type="text/javascript" src="cordova.js"></script><!-- not used before compile time -->
 		
         <script>
-	
+
+/**
+ * global ajax error handling
+ */
 $( document ).ajaxError(function( event, request, settings, error ) {
-  // global ajax error handling
   var httpStatusCode = request.getResponseHeader("status"); // It is worth noting that browsers report a status of 0 in case of XMLHttpRequest errors too. https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/status
   var clientMsg = "Got error " + error + "\n on " + settings.type + " " + settings.url + "\n from app " + event.currentTarget.URL + " \n " + request.status + " " + request.statusText + " (" + httpStatusCode + ")";
   alert(clientMsg); //FIXME: remove, log
@@ -28,20 +30,33 @@ $( document ).ajaxError(function( event, request, settings, error ) {
   //$( "div div:jqmData(role=footer)" ).append( "<li><font color='red'>" + clientMsg + "</font></li>" );
 });
     
-	// Respond to back/forward navigation
+/**
+ * Respond to back/forward navigation
+ */
 $( window ).on( "navigate", function( event, data ){
-  if( data.state.foo ){
-    // Make use of the arbitrary data stored
-  }
-
   if( data.state.direction == "back" ) {
     // Make use of the directional information
+    console.log("back to page=" + data.state.pageUrl);
+    if( data.state.pageUrl == "add_mykid_page"){
+      // back from "choose school" to "choose city": reset school
+      client.chosenSchool = null;
+      client.chosenSchoolId = null;
+      client.chosenCity = null;
+      client.chosenCityId = null;
+      client.loadingSchools = null;
+      client.loadingCities = false;
+    }    
   }
+  // reset state
+});
 
-  // reset the content based on the url
-  // alert(data.state.url); yields "http://host/index.html" resp. "http://host/index.html#xyz_page"
-  //client.prepareMyKidPage();
-  
+/**
+ * page navigation completed, on show page
+ */
+$(document).on('pageshow', 'div:jqmData(role="page")', function(event){
+  if (this.id == "add_mykid_page") {
+    client.prepareMyKidPage();
+  }
 });
 	
 	/* 

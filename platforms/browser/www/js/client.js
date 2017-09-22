@@ -237,7 +237,7 @@ var client = {
 	
 	
 	preparePage: function(page, next, drilldownCallback, addItemCallback) {
-	  $( document ).on( "pagecreate", "#" + page + "_page", function() {
+	  $( document ).on( "pageshow", "#" + page + "_page", function() {
 	    
 	    if (page == "school") {
           client.loadingSchools = Date.now(); //FIXME move elsewhere
